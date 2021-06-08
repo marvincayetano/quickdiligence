@@ -1,52 +1,37 @@
 import "reflect-metadata";
 import "dotenv-safe/config";
 
+import cors from "cors";
 import Redis from "ioredis";
 import express from "express";
 import session from "express-session";
 import connectRedis from "connect-redis";
-import cors from "cors";
-import { createConnection } from "typeorm";
+// import { createConnection } from "typeorm";
 
 import { ApolloServer } from "apollo-server-express";
+import { StockResolver } from "./resolvers/stock";
 
 import { COOKIE_NAME, __prod__ } from "./constants";
 import { buildSchema } from "type-graphql";
 
-import { HelloResolver } from "./resolvers/hello";
-import { AnimalResolver } from "./resolvers/stock";
-import { UserResolver } from "./resolvers/user";
-
-import { User } from "./entities/User";
-import { Animal } from "./entities/Animal";
-import { LocatedAt } from "./entities/LocatedAt";
-import { createUserLoader } from "./utils/createUserLoader";
-
-import { scrapeOSPCA } from "./controllers/scrapeOSCPA";
-import { scrapeOHS } from "./controllers/scrapeOHS";
-import { scrapeTHS } from "./controllers/scrapeTHS";
+// import { Stock } from "./entities/Stock";
 
 // import path from "path";
 
 const main = async () => {
-  await createConnection({
-    type: "postgres",
-    database: "pet-detectivev1",
-    username: "postgres",
-    password: "postgres",
-    url: process.env.DATABASE_URL,
-    // logging: true,
-    synchronize: true,
-    // migrations: [path.join(__dirname, "./migrations/*")],
-    entities: [User, Animal, LocatedAt],
-  });
+  //   await createConnection({
+  //     type: "postgres",
+  //     database: "pet-detectivev1",
+  //     username: "postgres",
+  //     password: "postgres",
+  //     url: process.env.DATABASE_URL,
+  //     // logging: true,
+  //     synchronize: true,
+  //     // migrations: [path.join(__dirname, "./migrations/*")],
+  //     entities: [Stock],
+  //   });
 
-  // await conn.runMigrations();
-
-  //   Animal.delete({});
-  scrapeOSPCA();
-  scrapeTHS();
-  scrapeOHS();
+  //   await conn.runMigrations();
 
   const app = express();
 
@@ -81,14 +66,12 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver, AnimalResolver, UserResolver],
-      validate: false,
+      resolvers: [StockResolver],
     }),
     context: ({ req, res }) => ({
       req,
       res,
       redis,
-      userLoader: createUserLoader(),
     }),
   });
 
@@ -96,10 +79,6 @@ const main = async () => {
     app,
     cors: false,
   });
-
-  // Controllers
-  // Scrape controller
-  //   app.get("/scrape", scrape);
 
   app.listen(parseInt(process.env.PORT), () => {
     console.log("server started on localhost:3000");

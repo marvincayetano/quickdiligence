@@ -4,16 +4,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { LocatedAt } from "./LocatedAt";
-import { User } from "./User";
 
 @ObjectType()
 @Entity()
-export class Animal extends BaseEntity {
+export class Stock extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn()
   id!: number;
@@ -53,14 +50,6 @@ export class Animal extends BaseEntity {
   @Field()
   @Column()
   locatedAtId: number;
-
-  @Field()
-  @ManyToOne(() => User, (user) => user.animals)
-  creator: User;
-
-  @Field()
-  @ManyToOne(() => LocatedAt, (locatedAt) => locatedAt.animals)
-  locatedAt: LocatedAt;
 
   @Field() // This exposes the field. Removing this hides this field in the schema
   @Column({ type: "text" })
