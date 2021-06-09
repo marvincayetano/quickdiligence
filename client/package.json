@@ -8,10 +8,9 @@
     "gen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
-    "@chakra-ui/icons": "^1.0.0",
-    "@chakra-ui/react": "^1.0.0",
     "@emotion/react": "^11.0.0",
     "@emotion/styled": "^11.0.0",
+    "@types/styled-components": "^5.1.10",
     "@urql/exchange-graphcache": "^3.4.0",
     "cloudinary-react": "^1.7.0",
     "formik": "^2.2.6",
@@ -23,6 +22,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-is": "^17.0.1",
+    "styled-components": "^5.3.0",
     "universal-cookie": "^4.0.4",
     "urql": "^1.11.6",
     "uuid": "^8.3.2"
