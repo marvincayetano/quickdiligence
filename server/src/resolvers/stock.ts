@@ -1,27 +1,22 @@
 // import { MyContext } from "../types";
-import { Resolver, Query, Arg, Int, FieldResolver, Root } from "type-graphql";
+import {
+  Resolver,
+  Query,
+  Arg,
+  Int,
+  FieldResolver,
+  Root,
+  InputType,
+  Field,
+} from "type-graphql";
 import { Stock } from "../entities/Stock";
 // import { getConnection } from "typeorm";
 
-// @InputType()
-// class StockInput {
-//   @Field()
-//   name: string;
-//   @Field()
-//   description: string;
-//   @Field()
-//   status: string;
-//   @Field()
-//   imgLink: string;
-//   @Field()
-//   animalType: string;
-//   @Field()
-//   gender: string;
-//   @Field()
-//   color: string;
-//   @Field()
-//   age: number;
-// }
+@InputType()
+class StockInput {
+  @Field()
+  tickerId: string;
+}
 
 @Resolver(Stock)
 export class StockResolver {
