@@ -1,12 +1,12 @@
 import "reflect-metadata";
 import "dotenv-safe/config";
 
-import cors from "cors";
 import Redis from "ioredis";
 import express from "express";
 import session from "express-session";
 import connectRedis from "connect-redis";
-// import { createConnection } from "typeorm";
+import cors from "cors";
+import { createConnection } from "typeorm";
 
 import { ApolloServer } from "apollo-server-express";
 import { StockResolver } from "./resolvers/stock";
@@ -14,7 +14,7 @@ import { StockResolver } from "./resolvers/stock";
 import { COOKIE_NAME, __prod__ } from "./constants";
 import { buildSchema } from "type-graphql";
 
-// import { Stock } from "./entities/Stock";
+import { Stock } from "./entities/Stock";
 
 // import path from "path";
 
