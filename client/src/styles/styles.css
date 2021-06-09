@@ -1,0 +1,50 @@
+html {
+  box-sizing: border-box;
+  font-size: 62.5%;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+html body {
+  position: relative;
+  min-height: 100%;
+  margin: 0;
+  font-weight: 400;
+  font-size: 1.8rem;
+  font-family: futura-pt, "system-ui", Helvetica Neue, sans-serif;
+  line-height: 1.4;
+
+  /* for dev */
+  background: gray;
+}
+
+div {
+  display: block;
+}
+
+header {
+  display: block;
+}
+
+ul {
+  display: block;
+  list-style-type: disc;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 40px;
+}
+
+li {
+  display: list-item;
+  text-align: -webkit-match-parent;
+}
+
+a {
+  color: #6e7272;
+  text-decoration: underline;
+}
