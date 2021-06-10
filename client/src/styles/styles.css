@@ -39,6 +39,15 @@ ul {
   padding-inline-start: 40px;
 }
 
+audio,
+canvas,
+iframe,
+img,
+svg,
+video {
+  vertical-align: middle;
+}
+
 li {
   display: list-item;
   text-align: -webkit-match-parent;
