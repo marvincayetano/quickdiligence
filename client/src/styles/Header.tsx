@@ -55,6 +55,13 @@ const Nav__itemLink = styled.a`
 
 const Nav__logo = styled(Nav__itemLink)`
   display: block;
+
+  &:img {
+    max-height: 2.6rem;
+    max-width: 100%;
+    height: auto;
+    border: 0;
+  }
 `;
 
 export {
@@ -64,4 +71,5 @@ export {
   Nav__element,
   Nav__icon,
   Nav__listItem,
+  Nav__logo,
 };
