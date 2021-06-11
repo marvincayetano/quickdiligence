@@ -3,6 +3,14 @@ import NextLink from "next/link";
 import { MoonIcon, SearchIcon } from "@chakra-ui/icons";
 
 import {
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalContent,
+  useDisclosure,
+} from "@chakra-ui/react";
+
+import {
   Header,
   NavHeader,
   Nav__icon,
@@ -19,6 +27,17 @@ import {
 interface NavBarProps {}
 
 export const NavBar: React.FC<NavBarProps> = ({}) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const searchOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Only open modal of e != null||""
+    const { value } = e.target;
+    if (value.length > 0) {
+      onOpen();
+    } else {
+      onClose();
+    }
+  };
   return (
     <Header>
       <NavHeader>
@@ -43,10 +62,25 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
                     aria-autocomplete="list"
                     autoComplete="false"
                     placeholder="Search for the stock"
+                    onChange={(e) => searchOnChange(e)}
                   />
                   <div>
                     <SearchIcon />
                   </div>
+                  <Modal
+                    isOpen={isOpen}
+                    onClose={onClose}
+                    trapFocus={false}
+                    size="2xl"
+                  >
+                    <ModalContent>
+                      <ModalBody>
+                        <h1>haha</h1>
+                      </ModalBody>
+
+                      <ModalFooter></ModalFooter>
+                    </ModalContent>
+                  </Modal>
                 </Nav__searchInput>
               </Nav__listItem>
             </Nav__search>
