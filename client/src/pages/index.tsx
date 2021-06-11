@@ -4,10 +4,12 @@ import { withUrqlClient } from "next-urql";
 import { Layout } from "../components/Layout";
 import { createUrqlClient } from "../utils/createUrqlClient";
 
+import { Section } from "../styles/Main";
+
 const Index = () => {
   return (
     <Layout>
-      <h1>hahha</h1>
+      <Section></Section>
     </Layout>
   );
 };

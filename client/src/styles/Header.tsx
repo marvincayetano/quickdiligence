@@ -46,6 +46,14 @@ const Nav__icon = styled(Nav__list)`
   justify-content: flex-start;
 `;
 
+const Nav__search = styled(Nav__list)`
+  justify-content: center;
+
+  li {
+    flex: 1 0 auto;
+  }
+`;
+
 const Nav__support = styled(Nav__list)`
   justify-content: flex-end;
   a {
@@ -63,15 +71,19 @@ const Nav__listSuppBtn = styled.li`
   padding-left: 2rem;
   a {
     color: #fff;
-    padding-left: 3.2rem;
-    padding-right: 3.2rem;
+    padding-left: 2.2rem;
+    padding-right: 2.2rem;
     padding-top: 1.2rem;
     padding-bottom: 1.2rem;
     line-height: 1.4;
     font-weight: 700;
     border-style: none;
     border-radius: 9999px;
-    background-color: #fab131;
+    background-color: #c7c8ca;
+    border-color: var(--chakra-colors-gray-200);
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    border-radius: var(--chakra-radii-md);
 
     span {
       color: #f05024;
@@ -95,14 +107,66 @@ const Nav__logo = styled(Nav__itemLink)`
   }
 `;
 
+const Nav__searchInput = styled.div`
+  display: flex;
+  -webkit-box-align: stretch;
+  align-items: stretch;
+  position: relative;
+
+  input {
+    width: 100%;
+    height: 5rem;
+    padding-left: 5rem;
+    font-weight: 500;
+    outline: transparent solid 2px;
+    outline-offset: 2px;
+    background: #fff;
+    padding-inline-end: var(--chakra-space-4);
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    box-shadow: var(--chakra-shadows-base);
+    border-radius: var(--chakra-radii-md);
+  }
+
+  div {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    position: absolute;
+    left: var(--chakra-space-7);
+    height: 5rem;
+    color: var(--chakra-colors-gray-400);
+  }
+
+  *,
+  ::before,
+  ::after {
+    border-color: var(--chakra-colors-gray-200);
+    overflow-wrap: break-word;
+  }
+  *,
+  ::before,
+  ::after {
+    border-width: 0px;
+    border-style: solid;
+    box-sizing: border-box;
+  }
+`;
+
+// TODO: USE VAR FOR COLORS AND MEDIA QUERIES
+
 export {
   Header,
   NavHeader,
   Nav__icon,
   Nav__logo,
+  Nav__search,
   Nav__element,
   Nav__support,
   Nav__listItem,
   Nav__container,
   Nav__listSuppBtn,
+  Nav__searchInput,
 };
