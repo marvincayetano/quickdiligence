@@ -19,6 +19,10 @@ const Nav__container = styled.div`
   height: 7.5rem;
   background: #fff;
   transition: box-shadow 0.7s cubic-bezier(0.19, 1, 0.4, 1);
+
+  @media (max-width: 960px) {
+    height: 6.5rem;
+  }
 `;
 
 const Nav__element = styled.div`
@@ -42,10 +46,37 @@ const Nav__icon = styled(Nav__list)`
   justify-content: flex-start;
 `;
 
+const Nav__support = styled(Nav__list)`
+  justify-content: flex-end;
+  a {
+    text-decoration: none;
+  }
+`;
+
 const Nav__listItem = styled.li`
   display: inline-block;
   flex: 0 0 auto;
   font-weight: 600;
+`;
+
+const Nav__listSuppBtn = styled.li`
+  padding-left: 2rem;
+  a {
+    color: #fff;
+    padding-left: 3.2rem;
+    padding-right: 3.2rem;
+    padding-top: 1.2rem;
+    padding-bottom: 1.2rem;
+    line-height: 1.4;
+    font-weight: 700;
+    border-style: none;
+    border-radius: 9999px;
+    background-color: #fab131;
+
+    span {
+      color: #f05024;
+    }
+  }
 `;
 
 const Nav__itemLink = styled.a`
@@ -55,13 +86,23 @@ const Nav__itemLink = styled.a`
 
 const Nav__logo = styled(Nav__itemLink)`
   display: block;
+
+  &:img {
+    max-height: 2.6rem;
+    max-width: 100%;
+    height: auto;
+    border: 0;
+  }
 `;
 
 export {
   Header,
   NavHeader,
-  Nav__container,
-  Nav__element,
   Nav__icon,
+  Nav__logo,
+  Nav__element,
+  Nav__support,
   Nav__listItem,
+  Nav__container,
+  Nav__listSuppBtn,
 };
