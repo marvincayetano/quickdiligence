@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import NextLink from "next/link";
 import { MoonIcon, SearchIcon } from "@chakra-ui/icons";
+import Nprogress from "nprogress";
 
 import {
   Modal,
@@ -23,21 +24,34 @@ import {
   Nav__listSuppBtn,
   Nav__searchInput,
 } from "../styles/Header";
+import { ModalList } from "./ModalList";
 
 interface NavBarProps {}
 
 export const NavBar: React.FC<NavBarProps> = ({}) => {
+  // This is for how long before search starts
+  const DONE_TYPING_INTERVAL = 3000;
+
+  const [stock, setStock] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const searchOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Only open modal of e != null||""
-    const { value } = e.target;
-    if (value.length > 0) {
+  let typingTimer: any;
+
+  const doneTyping = () => {
+    Nprogress.done();
+    if (stock.length > 0) {
       onOpen();
+
+      // Search for ticker here
+      // Wait for 3 seconds before requesting to server
+      fetch(`https://ticker-2e1ica8b9.now.sh/keyword/${stock}`).then((res) => {
+        console.log("RESULT: ", res);
+      });
     } else {
       onClose();
     }
   };
+
   return (
     <Header>
       <NavHeader>
@@ -62,7 +76,20 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
                     aria-autocomplete="list"
                     autoComplete="false"
                     placeholder="Search for the stock"
-                    onChange={(e) => searchOnChange(e)}
+                    onChange={(e) => {
+                      setStock(e.target.value);
+                    }}
+                    onKeyUp={() => {
+                      Nprogress.start();
+                      clearTimeout(typingTimer);
+                      typingTimer = setTimeout(
+                        doneTyping,
+                        DONE_TYPING_INTERVAL
+                      );
+                    }}
+                    onKeyDown={() => {
+                      clearTimeout(typingTimer);
+                    }}
                   />
                   <div>
                     <SearchIcon />
@@ -75,7 +102,13 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
                   >
                     <ModalContent>
                       <ModalBody>
-                        <h1>haha</h1>
+                        <li>
+                          <ModalList />
+                          <ModalList />
+                          <ModalList />
+                          <ModalList />
+                          <ModalList />
+                        </li>
                       </ModalBody>
 
                       <ModalFooter></ModalFooter>

@@ -1,5 +1,6 @@
 import "../styles/styles.css";
 import "../styles/custom.css";
+import "nprogress/nprogress.css";
 import { ChakraProvider } from "@chakra-ui/react";
 
 const MyApp = ({ Component, pageProps }: any) => {

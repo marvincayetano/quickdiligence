@@ -1,3 +1,12 @@
 .chakra-modal__content-container {
+  display: flex;
   padding-top: 3.2rem;
+}
+
+.modal__left {
+  width: 255px;
+}
+
+.modal__right {
+  width: 327px;
 }

@@ -107,11 +107,23 @@ const Nav__logo = styled(Nav__itemLink)`
   }
 `;
 
+const Nav__searchResultContainer = styled(Nav__search)`
+  outline: transparent solid 2px;
+  outline-offset: 2px;
+  background: #fff;
+  padding-inline-end: var(--chakra-space-4);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--chakra-shadows-base);
+  border-radius: var(--chakra-radii-md);
+`;
+
 const Nav__searchInput = styled.div`
   display: flex;
   -webkit-box-align: stretch;
   align-items: stretch;
   position: relative;
+  color: #54575a;
 
   input {
     width: 100%;
@@ -155,6 +167,18 @@ const Nav__searchInput = styled.div`
   }
 `;
 
+const Nav__searchResult = styled.div`
+  display: flex;
+  align-items: center;
+  height: 5rem;
+  padding-left: 2rem;
+  color: #54575a;
+
+  a {
+    flex: 1;
+    font-weight: 500;
+  }
+`;
 // TODO: USE VAR FOR COLORS AND MEDIA QUERIES
 
 export {
@@ -169,4 +193,6 @@ export {
   Nav__container,
   Nav__listSuppBtn,
   Nav__searchInput,
+  Nav__searchResult,
+  Nav__searchResultContainer,
 };
