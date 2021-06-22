@@ -35,7 +35,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
   const DONE_TYPING_INTERVAL = 3000;
 
   const [stock, setStock] = useState("");
-  const [stocks, setStocks] = useState([]);
+  const [stocks, setStocks] = useState<any[]>([]);
   useEffect(() => {}, [stocks]);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -51,13 +51,13 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
         .then((res) => {
           setStocks(res.data);
           console.log("RESULTS", res.data);
-          Nprogress.done();
         });
 
       onOpen();
     } else {
       onClose();
     }
+    Nprogress.done();
   };
 
   return (

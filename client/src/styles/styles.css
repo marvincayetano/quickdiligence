@@ -43,6 +43,11 @@ li {
   list-style: none;
 }
 
+p,
+h1 {
+  color: #55575a;
+}
+
 audio,
 canvas,
 iframe,

@@ -12,11 +12,13 @@ interface ModalListProps {
 
 export const ModalList: React.FC<ModalListProps> = ({ symbol, name }) => {
   return (
-    <Nav__searchResultContainer>
+    <Nav__searchResultContainer style={{ marginTop: "1rem" }}>
       <Nav__listItem>
         <Nav__searchResult>
           <a href="">{symbol}</a>
-          <a href="">{name}</a>
+          <a href="" style={{ fontSize: "1.5rem" }}>
+            {name}
+          </a>
         </Nav__searchResult>
       </Nav__listItem>
     </Nav__searchResultContainer>

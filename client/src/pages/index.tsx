@@ -7,11 +7,7 @@ import { createUrqlClient } from "../utils/createUrqlClient";
 import { Section } from "../styles/Main";
 
 const Index = () => {
-  return (
-    <Layout>
-      <Section></Section>
-    </Layout>
-  );
+  return <Section></Section>;
 };
 
 export default withUrqlClient(createUrqlClient, { ssr: true })(Index);
