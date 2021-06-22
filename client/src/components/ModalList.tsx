@@ -5,16 +5,19 @@ import {
   Nav__searchResultContainer,
 } from "../styles/Header";
 
-interface ModalListProps {}
+interface ModalListProps {
+  symbol: string;
+  name: string;
+}
 
-export const ModalList: React.FC<ModalListProps> = ({}) => {
+export const ModalList: React.FC<ModalListProps> = ({ symbol, name }) => {
   return (
     <Nav__searchResultContainer>
       <Nav__listItem>
         <Nav__searchResult>
-          <a href="">A.TSX Alphabet</a>
+          <a href="">{symbol}</a>
+          <a href="">{name}</a>
         </Nav__searchResult>
-        {/* <div>👀</div> */}
       </Nav__listItem>
     </Nav__searchResultContainer>
   );

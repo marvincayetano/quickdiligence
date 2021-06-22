@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NextLink from "next/link";
-import { MoonIcon, SearchIcon } from "@chakra-ui/icons";
 import Nprogress from "nprogress";
+import axios from "axios";
+
+import { MoonIcon, SearchIcon } from "@chakra-ui/icons";
 
 import {
   Modal,
@@ -33,20 +35,26 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
   const DONE_TYPING_INTERVAL = 3000;
 
   const [stock, setStock] = useState("");
+  const [stocks, setStocks] = useState([]);
+  useEffect(() => {}, [stocks]);
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   let typingTimer: any;
 
   const doneTyping = () => {
-    Nprogress.done();
     if (stock.length > 0) {
-      onOpen();
-
       // Search for ticker here
       // Wait for 3 seconds before requesting to server
-      fetch(`https://ticker-2e1ica8b9.now.sh/keyword/${stock}`).then((res) => {
-        console.log("RESULT: ", res);
-      });
+      axios
+        .get(`https://ticker-2e1ica8b9.now.sh/keyword/${stock}`)
+        .then((res) => {
+          setStocks(res.data);
+          console.log("RESULTS", res.data);
+          Nprogress.done();
+        });
+
+      onOpen();
     } else {
       onClose();
     }
@@ -80,7 +88,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
                       setStock(e.target.value);
                     }}
                     onKeyUp={() => {
-                      Nprogress.start();
+                      Nprogress.set(0.4);
                       clearTimeout(typingTimer);
                       typingTimer = setTimeout(
                         doneTyping,
@@ -103,11 +111,13 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
                     <ModalContent>
                       <ModalBody>
                         <li>
-                          <ModalList />
-                          <ModalList />
-                          <ModalList />
-                          <ModalList />
-                          <ModalList />
+                          {stocks.map((s) => (
+                            <ModalList
+                              key={s.symbol}
+                              symbol={s.symbol}
+                              name={s.name}
+                            />
+                          ))}
                         </li>
                       </ModalBody>
 
