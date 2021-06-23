@@ -17,4 +17,30 @@ const Index__name = styled.p`
   font-size: 2rem;
 `;
 
-export { Index__symbolContainer, Index__symbol, Index__name };
+const Index__optionsContainer = styled.div`
+  height: 20rem;
+  display: flex;
+  background: #f9f7f8;
+  justify-content: center;
+`;
+
+const Index__optionsTable = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: left;
+  width: 60vw;
+  background: #fff;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--chakra-shadows-base);
+  border-radius: var(--chakra-radii-md);
+`;
+
+export {
+  Index__symbolContainer,
+  Index__optionsContainer,
+  Index__optionsTable,
+  Index__symbol,
+  Index__name,
+};
