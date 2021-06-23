@@ -28,9 +28,11 @@ import {
 } from "../styles/Header";
 import { ModalList } from "./ModalList";
 
-interface NavBarProps {}
+interface NavBarProps {
+  setFoundStock: any;
+}
 
-export const NavBar: React.FC<NavBarProps> = ({}) => {
+export const NavBar: React.FC<NavBarProps> = ({ setFoundStock }) => {
   // This is for how long before search starts
   const DONE_TYPING_INTERVAL = 3000;
 
@@ -116,6 +118,8 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
                               key={s.symbol}
                               symbol={s.symbol}
                               name={s.name}
+                              setFoundStock={setFoundStock}
+                              onClose={onClose}
                             />
                           ))}
                         </li>

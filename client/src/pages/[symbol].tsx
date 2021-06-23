@@ -1,19 +1,16 @@
 import React from "react";
-import { withUrqlClient } from "next-urql";
-
-import { createUrqlClient } from "../utils/createUrqlClient";
 import { Layout } from "../components/Layout";
-import { NextPage } from "next";
-import { useRouter } from "next/router";
 import {
   Index__symbol,
   Index__name,
   Index__symbolContainer,
 } from "../styles/Index";
 
-const Animal: NextPage = ({}) => {
-  const router = useRouter();
+interface SymbolProps {
+  foundStock: any;
+}
 
+const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
   return (
     <Layout>
       <div
@@ -25,11 +22,11 @@ const Animal: NextPage = ({}) => {
         }}
       ></div>
       <Index__symbolContainer>
-        <Index__symbol>{router.query.symbol}</Index__symbol>
-        <Index__name>{router.query.symbol}</Index__name>
+        <Index__symbol>{foundStock.symbol}</Index__symbol>
+        <Index__name>{foundStock.name}</Index__name>
       </Index__symbolContainer>
     </Layout>
   );
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(Animal);
+export default Symbol;
