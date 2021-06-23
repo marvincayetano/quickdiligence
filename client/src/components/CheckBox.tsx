@@ -8,9 +8,11 @@ interface CheckBoxProps {
 
 export const CheckBox: React.FC<CheckBoxProps> = ({ name, description }) => {
   return (
-    <Stack spacing={10} ml="2rem" mt="2rem" direction="row">
+    <Stack spacing={10} m="2rem" direction="row">
       <Checkbox size="lg" colorScheme="green" defaultChecked>
-        <span style={{ fontSize: "2rem", color: "#55575A" }}>
+        <span
+          style={{ fontSize: "2rem", color: "#55575A", marginLeft: "1rem" }}
+        >
           {description}
         </span>
       </Checkbox>

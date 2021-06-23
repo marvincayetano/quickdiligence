@@ -2,11 +2,19 @@ import styled from "styled-components";
 
 const Index__symbolContainer = styled.div`
   display: flex;
-  height: 20rem;
   background: #f9f7f8;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
+  flex-direction: row;
+
+  .btn__analyze {
+    padding-left: 2rem;
+
+    button {
+      font-size: 2rem;
+      height: 4rem;
+    }
+  }
 `;
 
 const Index__symbol = styled.p`
@@ -18,8 +26,8 @@ const Index__name = styled.p`
 `;
 
 const Index__optionsContainer = styled.div`
-  height: 20rem;
   display: flex;
+  padding: 2rem;
   background: #f9f7f8;
   justify-content: center;
 `;
