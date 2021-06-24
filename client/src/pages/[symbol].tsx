@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 
@@ -21,6 +21,7 @@ interface SymbolProps {
 
 const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
   const router = useRouter();
+  // TODO: Make this a constant array of objects that contains the name and description
   const [currentOptions, setCurrentOptions] = useState([
     "EPS",
     "ROI",
@@ -40,16 +41,21 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const onProcess = async () => {
-    Nprogress.start();
+    Nprogress.set(0.2);
     setIsLoading(true);
 
     console.log(currentOptions);
     await axios
       .get(`http://localhost:3000/analyze/${router.query.symbol}`, {
-        params: {},
+        params: {
+          currentOptions,
+        },
       })
       .then((res) => {
         console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
       });
   };
 
