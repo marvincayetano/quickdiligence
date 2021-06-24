@@ -8,7 +8,7 @@ import connectRedis from "connect-redis";
 import cors from "cors";
 
 import { COOKIE_NAME, __prod__ } from "./constants";
-import { getStock } from "./controllers/stock";
+import { getStockPrice, getAnalyze } from "./controllers/stock";
 
 const main = async () => {
   const app = express();
@@ -42,7 +42,8 @@ const main = async () => {
     })
   );
 
-  app.get("/:stockID", getStock);
+  app.get("/price/:symbol", getStockPrice);
+  app.get("/analyze/:symbol", getAnalyze);
 
   app.listen(parseInt(process.env.PORT), () => {
     console.log("server started on localhost:3000");

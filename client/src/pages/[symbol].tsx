@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import axios from "axios";
 
 import Nprogress from "nprogress";
 import { Button } from "@chakra-ui/react";
@@ -18,11 +20,37 @@ interface SymbolProps {
 }
 
 const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
+  const router = useRouter();
+  const [currentOptions, setCurrentOptions] = useState([
+    "EPS",
+    "ROI",
+    "DEBT",
+    "PERATIO",
+    "IRATIO",
+    "RGROWTH",
+    "INCOMELOSS",
+    "PNETINCOME",
+    "BSHEET",
+    "AL",
+    "GI",
+    "LD",
+    "SHE",
+    "CFC",
+  ]) as any;
   const [isLoading, setIsLoading] = useState(false);
 
-  const onProcess = () => {
+  const onProcess = async () => {
     Nprogress.start();
     setIsLoading(true);
+
+    console.log(currentOptions);
+    await axios
+      .get(`http://localhost:3000/analyze/${router.query.symbol}`, {
+        params: {},
+      })
+      .then((res) => {
+        console.log(res);
+      });
   };
 
   return (
@@ -37,7 +65,7 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
       ></div>
       <Index__symbolContainer>
         <div>
-          <Index__symbol>{foundStock.symbol}</Index__symbol>
+          <Index__symbol>{router.query.symbol}</Index__symbol>
           <Index__name>{foundStock.name}</Index__name>
           <Index__name>
             <ArrowUpIcon color="green" /> $14.45
@@ -60,46 +88,86 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
           <CheckBox
             name="EPS"
             description="Positive number EPS(Earnings per share) and continued increase"
+            currentOptions={currentOptions}
+            setCurrentOptions={setCurrentOptions}
           />
           <CheckBox
             name="ROI"
             description="Return on investment continued growth"
+            currentOptions={currentOptions}
+            setCurrentOptions={setCurrentOptions}
           />
           <CheckBox
             name="DEBT"
             description="DEBT payback time (Long term debt or free cash flow). Must be 3years or less"
+            currentOptions={currentOptions}
+            setCurrentOptions={setCurrentOptions}
           />
           <CheckBox
             name="PERATIO"
             description="Is the stock trading at a reasonable price? PE Ratio = Stock price/EPS. Must be 15 or less"
+            currentOptions={currentOptions}
+            setCurrentOptions={setCurrentOptions}
           />
           <CheckBox
             name="IRATIO"
             description="Interest coverage ratio of 6 or higher"
+            currentOptions={currentOptions}
+            setCurrentOptions={setCurrentOptions}
           />
           <CheckBox
             name="RGROWTH"
             description="Steady climb or revenue growth over the last 3 years"
+            currentOptions={currentOptions}
+            setCurrentOptions={setCurrentOptions}
           />
           <CheckBox
             name="INCOMELOSS"
             description="Positive operating income/loss"
+            currentOptions={currentOptions}
+            setCurrentOptions={setCurrentOptions}
           />
-          <CheckBox name="PNETINCOME" description="Positive net income" />
-          <CheckBox name="BSHEET" description="A lot of total cash" />
-          <CheckBox name="AL" description="Higher assets than liabilities" />
+          <CheckBox
+            name="PNETINCOME"
+            description="Positive net income"
+            currentOptions={currentOptions}
+            setCurrentOptions={setCurrentOptions}
+          />
+          <CheckBox
+            name="BSHEET"
+            description="A lot of total cash"
+            currentOptions={currentOptions}
+            setCurrentOptions={setCurrentOptions}
+          />
+          <CheckBox
+            name="AL"
+            description="Higher assets than liabilities"
+            currentOptions={currentOptions}
+            setCurrentOptions={setCurrentOptions}
+          />
           <CheckBox
             name="GI"
             description="Goodwill and intangible assets should be zero or small"
+            currentOptions={currentOptions}
+            setCurrentOptions={setCurrentOptions}
           />
-          <CheckBox name="LD" description="Long term debt. Less is better" />
+          <CheckBox
+            name="LD"
+            description="Long term debt. Less is better"
+            currentOptions={currentOptions}
+            setCurrentOptions={setCurrentOptions}
+          />
           <CheckBox
             name="SHE"
             description="Stock holder equity. Want this to see growth over the past 3 years"
+            currentOptions={currentOptions}
+            setCurrentOptions={setCurrentOptions}
           />
           <CheckBox
             name="CFC"
             description="Cash flow chart. They should be investing for themselves"
+            currentOptions={currentOptions}
+            setCurrentOptions={setCurrentOptions}
           />
         </Index__optionsTable>
       </Index__optionsContainer>
