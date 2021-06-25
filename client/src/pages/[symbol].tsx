@@ -6,7 +6,7 @@ import Nprogress from "nprogress";
 import { Button } from "@chakra-ui/react";
 import { CheckBox } from "../components/CheckBox";
 import { Layout } from "../components/Layout";
-import { ArrowForwardIcon, ArrowUpIcon } from "@chakra-ui/icons";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
 import {
   Index__symbol,
   Index__name,
@@ -39,12 +39,27 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
     "CFC",
   ]) as any;
   const [isLoading, setIsLoading] = useState(false);
+  const [price, setPrice] = useState(null);
 
   const onProcess = async () => {
     Nprogress.set(0.2);
     setIsLoading(true);
 
-    console.log(currentOptions);
+    // This get is getting the current price of the symbol
+    // await axios
+    //   .get(`http://localhost:3000/price/${router.query.symbol}`, {
+    //     params: {
+    //       currentOptions,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     setPrice(res.data);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+
+    // This get is getting the results after analyzing the stock
     await axios
       .get(`http://localhost:3000/analyze/${router.query.symbol}`, {
         params: {
@@ -52,7 +67,7 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
         },
       })
       .then((res) => {
-        console.log(res);
+        setPrice(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -73,9 +88,7 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
         <div>
           <Index__symbol>{router.query.symbol}</Index__symbol>
           <Index__name>{foundStock.name}</Index__name>
-          <Index__name>
-            <ArrowUpIcon color="green" /> $14.45
-          </Index__name>
+          <Index__name>{price && `$${price}`}</Index__name>
         </div>
         <div className="btn__analyze">
           <Button
