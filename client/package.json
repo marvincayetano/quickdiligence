@@ -8,10 +8,12 @@
     "gen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "-": "^0.0.1",
     "@chakra-ui/icons": "^1.0.0",
     "@chakra-ui/react": "^1.0.0",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
+    "@types/react-chartjs-2": "^2.5.7",
     "@types/styled-components": "^5.1.10",
     "@urql/exchange-graphcache": "^3.4.0",
     "axios": "^0.21.1",
@@ -23,6 +25,7 @@
     "isomorphic-unfetch": "^3.1.0",
     "next": "latest",
     "next-urql": "^2.2.0",
+    "npm": "^7.19.0",
     "nprogress": "^0.2.0",
     "react": "^17.0.1",
     "react-chartjs-2": "^3.0.3",

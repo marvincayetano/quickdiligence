@@ -44,39 +44,36 @@ export const getAnalyze = async (req: Request, res: Response) => {
     console.log(err);
   }
 
+  // epsArr contains the eps from the last 2 years and the future year eg. 2019 2020 2021 2022
   const epsArr = await page.$$eval(
     "table > tbody > tr:nth-child(5) > td",
     (lists) => {
       const contents = [];
 
+      // TODO: Not all stocks have 4 years of eps history in yahoo finance
       for (var i = 1; i <= 4; i++) {
-        contents.push(lists[i].querySelector("span")?.innerText);
+        contents.push(
+          parseFloat(lists[i].querySelector("span")?.innerText as string)
+        );
       }
 
       return contents;
     }
   );
+  console.log("EPS", epsArr);
 
-  console.log(epsArr);
+  const returnObject = {
+    EPS: {
+      // Checks if the current EPS is positive
+      isPositiveNumber: epsArr[2] ? epsArr[2] > 0 : epsArr[0] > 0,
+      // Checks if the EPS is increasing each year
+      isIncreasing:
+        epsArr[0] > epsArr[1] && epsArr[1] > epsArr[2] && epsArr[2] > epsArr[3]
+          ? true
+          : false,
+      data: epsArr,
+    },
+  };
 
-  //   const animals = await page.$$eval(".ResultsTable > tbody > tr", (lists) => {
-  //     // lists has all the values inside of td
-  //     // each list has 7 contents each
-  //     const contents = [];
-  //     for (var i = 1; i <= lists.length - 1; i++) {
-  //       contents.push({
-  //         imgLink: lists[i].querySelector("td:first-child > a > img").src,
-  //         animalType: lists[i].querySelector("td:nth-child(2)")?.innerText,
-  //         name: lists[i]
-  //           .querySelector("td:nth-child(3)")
-  //           ?.innerText.split("\n")[0],
-  //         gender: lists[i].querySelector("td:nth-child(4)")?.innerText,
-  //         color: lists[i].querySelector("td:nth-child(5)")?.innerText,
-  //         description: lists[i].querySelector("td:nth-child(6)")?.innerText,
-  //         age: lists[i].querySelector("td:last-child")?.innerText,
-  //         status: "found",
-  //       });
-  //     }
-  //     return contents;
-  //   });
+  console.log(returnObject);
 };

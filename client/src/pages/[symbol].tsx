@@ -3,10 +3,12 @@ import { useRouter } from "next/router";
 import axios from "axios";
 
 import Nprogress from "nprogress";
-import { Button } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import { CheckBox } from "../components/CheckBox";
 import { Layout } from "../components/Layout";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
+import { Line } from "react-chartjs-2";
+
 import {
   Index__symbol,
   Index__name,
@@ -18,6 +20,21 @@ import {
 interface SymbolProps {
   foundStock: any;
 }
+
+const eps_linechart_options = {
+  plugins: {
+    legend: false,
+  },
+  scales: {
+    yAxes: [
+      {
+        ticks: {
+          beginAtZero: true,
+        },
+      },
+    ],
+  },
+};
 
 const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
   const router = useRouter();
@@ -40,6 +57,19 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
   ]) as any;
   const [isLoading, setIsLoading] = useState(false);
   const [price, setPrice] = useState(null);
+
+  const eps_data = {
+    labels: ["1", "2", "3", "4", "5", "6"],
+    datasets: [
+      {
+        label: "# of Votes",
+        data: [12, 19, 3, 5, 2, 3],
+        fill: false,
+        backgroundColor: "rgb(255, 99, 132)",
+        borderColor: "rgba(255, 99, 132, 0.2)",
+      },
+    ],
+  };
 
   const onProcess = async () => {
     Nprogress.set(0.2);
@@ -110,6 +140,9 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
             currentOptions={currentOptions}
             setCurrentOptions={setCurrentOptions}
           />
+          <Box p="0 2rem">
+            <Line type="Line" data={eps_data} options={eps_linechart_options} />
+          </Box>
           <CheckBox
             name="ROI"
             description="Return on investment continued growth"

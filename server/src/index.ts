@@ -1,10 +1,10 @@
 import "reflect-metadata";
 import "dotenv-safe/config";
 
-import Redis from "ioredis";
+// import Redis from "ioredis";
 import express from "express";
-import session from "express-session";
-import connectRedis from "connect-redis";
+// import session from "express-session";
+// import connectRedis from "connect-redis";
 import cors from "cors";
 
 import { COOKIE_NAME, __prod__ } from "./constants";
@@ -13,8 +13,8 @@ import { getStockPrice, getAnalyze } from "./controllers/stock";
 const main = async () => {
   const app = express();
 
-  const RedisStore = connectRedis(session);
-  const redis = new Redis(process.env.REDIS_URL);
+  //   const RedisStore = connectRedis(session);
+  //   const redis = new Redis(process.env.REDIS_URL);
 
   app.use(
     cors({
@@ -23,24 +23,24 @@ const main = async () => {
     })
   );
 
-  app.use(
-    session({
-      name: COOKIE_NAME,
-      store: new RedisStore({
-        client: redis,
-        disableTouch: true,
-      }),
-      cookie: {
-        maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
-        httpOnly: true,
-        sameSite: "lax", // csrf
-        secure: __prod__, // cookie only works in https
-      },
-      saveUninitialized: false,
-      secret: process.env.SESSION_SECRET,
-      resave: false,
-    })
-  );
+  //   app.use(
+  //     session({
+  //       name: COOKIE_NAME,
+  //       store: new RedisStore({
+  //         client: redis,
+  //         disableTouch: true,
+  //       }),
+  //       cookie: {
+  //         maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
+  //         httpOnly: true,
+  //         sameSite: "lax", // csrf
+  //         secure: __prod__, // cookie only works in https
+  //       },
+  //       saveUninitialized: false,
+  //       secret: process.env.SESSION_SECRET,
+  //       resave: false,
+  //     })
+  //   );
 
   app.get("/price/:symbol", getStockPrice);
   app.get("/analyze/:symbol", getAnalyze);
