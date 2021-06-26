@@ -33,6 +33,7 @@ export const getAnalyze = async (req: Request, res: Response) => {
   let browser = await puppeteer.launch();
   let page = await browser.newPage();
 
+  // EPS
   try {
     await page.goto(
       `https://ca.finance.yahoo.com/quote/${req.params.symbol}/analysis`,
@@ -62,8 +63,51 @@ export const getAnalyze = async (req: Request, res: Response) => {
   );
   console.log("EPS", epsArr);
 
+  // PE Ratio
+  try {
+    await page.goto(`https://ca.finance.yahoo.com/quote/${req.params.symbol}`, {
+      waitUntil: "networkidle0",
+    });
+  } catch (err) {
+    console.log(err);
+  }
+
+  // PERatio is for checking if the stock is over or under valued
+  const PERatio = await page.$$eval(
+    "div > table > tbody > tr > td",
+    (lists) => {
+      return parseFloat((lists[21] as HTMLElement).innerText);
+    }
+  );
+
+  console.log("PERatio", PERatio);
+
+  // Interest coverage ratio
+  try {
+    await page.goto(
+      `https://ca.finance.yahoo.com/quote/${req.params.symbol}/financials`,
+      {
+        waitUntil: "networkidle0",
+      }
+    );
+  } catch (err) {
+    console.log(err);
+  }
+
+  // Interest coverage ratio = EBIT / Interest expense
+  // Anything below 1 is bad
+  const ICRatio = await page.$$eval("div > span", (lists) => {
+    return (
+      parseFloat((lists[129] as HTMLElement).innerText) /
+      parseFloat((lists[76] as HTMLElement).innerText)
+    );
+  });
+
+  console.log("ICRatio", ICRatio);
+
   const returnObject = {
     EPS: {
+      data: epsArr,
       // Checks if the current EPS is positive
       isPositiveNumber: epsArr[2] ? epsArr[2] > 0 : epsArr[0] > 0,
       // Checks if the EPS is increasing each year
@@ -71,7 +115,16 @@ export const getAnalyze = async (req: Request, res: Response) => {
         epsArr[0] > epsArr[1] && epsArr[1] > epsArr[2] && epsArr[2] > epsArr[3]
           ? true
           : false,
-      data: epsArr,
+    },
+    PERatio: {
+      data: PERatio,
+      isUndervalued: PERatio < 14,
+      isOverValued: PERatio > 17,
+    },
+    ICRatio: {
+      data: ICRatio,
+      // Check if the IC ratio is 6 or higher
+      isSixHigher: ICRatio > 6,
     },
   };
 
