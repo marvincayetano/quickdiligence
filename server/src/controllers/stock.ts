@@ -2,7 +2,8 @@ import { Request, Response } from "express";
 import puppeteer from "puppeteer";
 
 export const getStockPrice = async (req: Request, res: Response) => {
-  let browser = await puppeteer.launch();
+  //   let browser = await puppeteer.launch({});
+  let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
   try {
@@ -105,6 +106,18 @@ export const getAnalyze = async (req: Request, res: Response) => {
 
   console.log("ICRatio", ICRatio);
 
+  // Interest coverage ratio = EBIT / Interest expense
+  // Anything below 1 is bad
+  const Revenue = await page.$$eval("div > span", (lists) => {
+    return [
+      (lists[29] as HTMLElement).innerText,
+      (lists[30] as HTMLElement).innerText,
+      (lists[31] as HTMLElement).innerText,
+    ];
+  });
+
+  console.log("Revenue", Revenue);
+
   const returnObject = {
     EPS: {
       data: epsArr,
@@ -125,6 +138,15 @@ export const getAnalyze = async (req: Request, res: Response) => {
       data: ICRatio,
       // Check if the IC ratio is 6 or higher
       isSixHigher: ICRatio > 6,
+    },
+    Revenue: {
+      data: Revenue,
+      // Check if Revenue is increasing
+      isIncreasing:
+        parseInt(Revenue[0]) > parseInt(Revenue[1]) &&
+        parseInt(Revenue[1]) > parseInt(Revenue[2])
+          ? true
+          : false,
     },
   };
 
