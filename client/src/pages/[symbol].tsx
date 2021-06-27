@@ -48,7 +48,7 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
     "RGROWTH",
     "INCOMELOSS",
     "PNETINCOME",
-    "BSHEET",
+    "CASH",
     "AL",
     "GI",
     "LD",
@@ -186,7 +186,7 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
             setCurrentOptions={setCurrentOptions}
           />
           <CheckBox
-            name="BSHEET"
+            name="CASH"
             description="A lot of total cash"
             currentOptions={currentOptions}
             setCurrentOptions={setCurrentOptions}

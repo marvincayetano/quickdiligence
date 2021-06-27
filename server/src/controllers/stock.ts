@@ -2,8 +2,7 @@ import { Request, Response } from "express";
 import puppeteer from "puppeteer";
 
 export const getStockPrice = async (req: Request, res: Response) => {
-  //   let browser = await puppeteer.launch({});
-  let browser = await puppeteer.launch({ headless: false });
+  let browser = await puppeteer.launch();
   let page = await browser.newPage();
 
   try {
@@ -62,7 +61,6 @@ export const getAnalyze = async (req: Request, res: Response) => {
       return contents;
     }
   );
-  console.log("EPS", epsArr);
 
   // PE Ratio
   try {
@@ -81,9 +79,7 @@ export const getAnalyze = async (req: Request, res: Response) => {
     }
   );
 
-  console.log("PERatio", PERatio);
-
-  // Interest coverage ratio
+  // FINANCIALS
   try {
     await page.goto(
       `https://ca.finance.yahoo.com/quote/${req.params.symbol}/financials`,
@@ -95,28 +91,47 @@ export const getAnalyze = async (req: Request, res: Response) => {
     console.log(err);
   }
 
-  // Interest coverage ratio = EBIT / Interest expense
-  // Anything below 1 is bad
-  const ICRatio = await page.$$eval("div > span", (lists) => {
-    return (
-      parseFloat((lists[129] as HTMLElement).innerText) /
-      parseFloat((lists[76] as HTMLElement).innerText)
+  const financials = await page.$$eval("div > span", (lists) => {
+    // Interest coverage ratio = EBIT / Interest expense
+    // Anything below 1 is bad
+    return {
+      ICRatio:
+        parseFloat((lists[129] as HTMLElement).innerText) /
+        parseFloat((lists[76] as HTMLElement).innerText),
+      // Revenue
+      // Checking if the revenue is increasing over the years
+      Revenue: [
+        (lists[29] as HTMLElement).innerText,
+        (lists[30] as HTMLElement).innerText,
+        (lists[31] as HTMLElement).innerText,
+      ],
+
+      // Operating income loss
+      // Shouldn't be negative
+      OILoss: (lists[70] as HTMLElement).innerText,
+      NIncome: (lists[108] as HTMLElement).innerText,
+    };
+  });
+
+  // FINANCIALS
+  try {
+    await page.goto(
+      `https://ca.finance.yahoo.com/quote/${req.params.symbol}/balance-sheet`,
+      {
+        waitUntil: "networkidle0",
+      }
     );
+  } catch (err) {
+    console.log(err);
+  }
+
+  const balanceSheet = await page.$$eval("div > span", (lists) => {
+    // Interest coverage ratio = EBIT / Interest expense
+    // Anything below 1 is bad
+    return {
+      TotalCash: (lists[41] as HTMLElement).innerText,
+    };
   });
-
-  console.log("ICRatio", ICRatio);
-
-  // Interest coverage ratio = EBIT / Interest expense
-  // Anything below 1 is bad
-  const Revenue = await page.$$eval("div > span", (lists) => {
-    return [
-      (lists[29] as HTMLElement).innerText,
-      (lists[30] as HTMLElement).innerText,
-      (lists[31] as HTMLElement).innerText,
-    ];
-  });
-
-  console.log("Revenue", Revenue);
 
   const returnObject = {
     EPS: {
@@ -134,21 +149,35 @@ export const getAnalyze = async (req: Request, res: Response) => {
       isUndervalued: PERatio < 14,
       isOverValued: PERatio > 17,
     },
-    ICRatio: {
-      data: ICRatio,
+    IRatio: {
+      data: financials.ICRatio,
       // Check if the IC ratio is 6 or higher
-      isSixHigher: ICRatio > 6,
+      isSixHigher: financials.ICRatio > 6,
     },
-    Revenue: {
-      data: Revenue,
+    RGrowth: {
+      data: financials.Revenue,
       // Check if Revenue is increasing
       isIncreasing:
-        parseInt(Revenue[0]) > parseInt(Revenue[1]) &&
-        parseInt(Revenue[1]) > parseInt(Revenue[2])
+        parseInt(financials.Revenue[0]) > parseInt(financials.Revenue[1]) &&
+        parseInt(financials.Revenue[1]) > parseInt(financials.Revenue[2])
           ? true
           : false,
+    },
+    IncomeLoss: {
+      data: financials.OILoss,
+      isNegative: (financials.OILoss as any).charAt[0] === "-" ? true : false,
+    },
+    PnetIncome: {
+      data: financials.NIncome,
+      isPositive: (financials.NIncome as any).charAt[0] === "-" ? false : true,
+    },
+    TotalCash: {
+      data: balanceSheet.TotalCash,
     },
   };
 
   console.log(returnObject);
+
+  await browser.close();
+  return res.send(true);
 };
