@@ -13,7 +13,7 @@ export const getStockPrice = async (req: Request, res: Response) => {
     console.log(err);
   }
 
-  page
+  await page
     .evaluate(
       () =>
         (
@@ -27,6 +27,7 @@ export const getStockPrice = async (req: Request, res: Response) => {
     });
 };
 
+// TODO: document.querySelector('div[data-reactId="286"]')
 export const getAnalyze = async (req: Request, res: Response) => {
   console.log("ANALYZE SYMBOL", req.params.symbol);
 
@@ -130,6 +131,14 @@ export const getAnalyze = async (req: Request, res: Response) => {
     // Anything below 1 is bad
     return {
       TotalCash: (lists[41] as HTMLElement).innerText,
+      TotalAssets: (lists[102] as HTMLElement).innerText,
+      TotalLiabilities: (lists[158] as HTMLElement).innerText,
+      LongTermDebt: (lists[137] as HTMLElement).innerText,
+      SHEquity: [
+        (lists[179] as HTMLElement).innerText,
+        (lists[180] as HTMLElement).innerText,
+        (lists[181] as HTMLElement).innerText,
+      ],
     };
   });
 
@@ -165,19 +174,46 @@ export const getAnalyze = async (req: Request, res: Response) => {
     },
     IncomeLoss: {
       data: financials.OILoss,
-      isNegative: (financials.OILoss as any).charAt[0] === "-" ? true : false,
+      isNegative:
+        (financials.OILoss as any).charAt[1] &&
+        (financials.OILoss as any).charAt[0] === "-"
+          ? true
+          : false,
     },
     PnetIncome: {
       data: financials.NIncome,
-      isPositive: (financials.NIncome as any).charAt[0] === "-" ? false : true,
+      isPositive:
+        (financials.NIncome as any).charAt[1] &&
+        (financials.NIncome as any).charAt[0] === "-"
+          ? false
+          : true,
     },
     TotalCash: {
       data: balanceSheet.TotalCash,
+    },
+    TotalAssets: {
+      data: {
+        assets: balanceSheet.TotalAssets,
+        liabilities: balanceSheet.TotalLiabilities,
+      },
+      isPositiveAL:
+        parseFloat(balanceSheet.TotalAssets) >
+        parseFloat(balanceSheet.TotalLiabilities),
+    },
+    SHEquity: {
+      data: balanceSheet.SHEquity,
+      isIncreasing:
+        parseFloat(balanceSheet.SHEquity[0]) >
+          parseFloat(balanceSheet.SHEquity[1]) &&
+        parseFloat(balanceSheet.SHEquity[1]) >
+          parseFloat(balanceSheet.SHEquity[2])
+          ? true
+          : false,
     },
   };
 
   console.log(returnObject);
 
   await browser.close();
-  return res.send(true);
+  res.send(returnObject);
 };

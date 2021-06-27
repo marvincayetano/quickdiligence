@@ -50,10 +50,8 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
     "PNETINCOME",
     "CASH",
     "AL",
-    "GI",
     "LD",
     "SHE",
-    "CFC",
   ]) as any;
   const [isLoading, setIsLoading] = useState(false);
   const [price, setPrice] = useState(null);
@@ -76,18 +74,18 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
     setIsLoading(true);
 
     // This get is getting the current price of the symbol
-    // await axios
-    //   .get(`http://localhost:3000/price/${router.query.symbol}`, {
-    //     params: {
-    //       currentOptions,
-    //     },
-    //   })
-    //   .then((res) => {
-    //     setPrice(res.data);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    await axios
+      .get(`http://localhost:3000/price/${router.query.symbol}`, {
+        params: {
+          currentOptions,
+        },
+      })
+      .then((res) => {
+        setPrice(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
     // This get is getting the results after analyzing the stock
     await axios
@@ -97,7 +95,7 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
         },
       })
       .then((res) => {
-        setPrice(res.data);
+        console.log(res);
       })
       .catch((err) => {
         console.log(err);
@@ -198,12 +196,6 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
             setCurrentOptions={setCurrentOptions}
           />
           <CheckBox
-            name="GI"
-            description="Goodwill and intangible assets should be zero or small"
-            currentOptions={currentOptions}
-            setCurrentOptions={setCurrentOptions}
-          />
-          <CheckBox
             name="LD"
             description="Long term debt. Less is better"
             currentOptions={currentOptions}
@@ -212,12 +204,6 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
           <CheckBox
             name="SHE"
             description="Stock holder equity. Want this to see growth over the past 3 years"
-            currentOptions={currentOptions}
-            setCurrentOptions={setCurrentOptions}
-          />
-          <CheckBox
-            name="CFC"
-            description="Cash flow chart. They should be investing for themselves"
             currentOptions={currentOptions}
             setCurrentOptions={setCurrentOptions}
           />
