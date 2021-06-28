@@ -39,6 +39,7 @@ const eps_linechart_options = {
 const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
   const router = useRouter();
   // TODO: Make this a constant array of objects that contains the name and description
+  const [analyze, setAnalyze] = useState({});
   const [currentOptions, setCurrentOptions] = useState([
     "EPS",
     "ROI",
@@ -96,6 +97,7 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
       })
       .then((res) => {
         console.log(res);
+        setAnalyze(res.data);
       })
       .catch((err) => {
         console.log(err);
