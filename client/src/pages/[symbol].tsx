@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 
 import Nprogress from "nprogress";
-import { Box, Button } from "@chakra-ui/react";
+import { Badge, Box, Button } from "@chakra-ui/react";
 import { CheckBox } from "../components/CheckBox";
 import { Layout } from "../components/Layout";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
@@ -16,6 +16,32 @@ import {
   Index__optionsContainer,
   Index__optionsTable,
 } from "../styles/Index";
+import { ResultContainer } from "../components/ResultContainer";
+
+interface AnalyzedData {
+    EPS: {
+        data: [number]
+        isPositiveNumber: boolean
+        isIncreasing: boolean
+      },
+      PERatio: { data: [number], isUndervalued: boolean, isOverValued: boolean },
+      IRatio: { data: [number], isSixHigher: boolean },
+      RGrowth: {
+        data: [string]
+        isIncreasing: boolean
+      },
+      IncomeLoss: { data: string, isNegative: boolean },
+      PnetIncome: { data: string, isPositive: boolean },
+      TotalCash: { data: string },
+      TotalAssets: {
+        data: { assets: string, liabilities: string },
+        isPositiveAL: boolean
+      },
+      SHEquity: {
+        data: [string],
+        isIncreasing: boolean
+      }
+}
 
 interface SymbolProps {
   foundStock: any;
@@ -39,7 +65,7 @@ const eps_linechart_options = {
 const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
   const router = useRouter();
   // TODO: Make this a constant array of objects that contains the name and description
-  const [analyze, setAnalyze] = useState({});
+  const [analyzedData, setAnalyzedData] = useState<AnalyzedData>();
   const [currentOptions, setCurrentOptions] = useState([
     "EPS",
     "ROI",
@@ -51,6 +77,7 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
     "PNETINCOME",
     "CASH",
     "AL",
+    "GWIA",
     "LD",
     "SHE",
   ]) as any;
@@ -97,7 +124,7 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
       })
       .then((res) => {
         console.log(res);
-        setAnalyze(res.data);
+        setAnalyzedData(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -161,6 +188,23 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
             currentOptions={currentOptions}
             setCurrentOptions={setCurrentOptions}
           />
+          <ResultContainer>
+                  <div>
+                      <span style={{ paddingRight: "1rem", fontSize: "2rem", fontWeight: 400 }}>
+                        {
+                            analyzedData && analyzedData.PERatio.data
+                        }
+                      </span>
+                    {
+                        // TODO: Remove after test && There should always be data
+                        analyzedData && (
+                            analyzedData.PERatio.isOverValued?
+                            <Badge style={{ fontSize: "1.3rem" }} colorScheme="red">Overvalued</Badge> :
+                            <Badge style={{ fontSize: "1.3rem" }} colorScheme="green">Good</Badge>
+                        )
+                    }
+                  </div>
+          </ResultContainer>
           <CheckBox
             name="IRATIO"
             description="Interest coverage ratio of 6 or higher"
@@ -194,6 +238,12 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
           <CheckBox
             name="AL"
             description="Higher assets than liabilities"
+            currentOptions={currentOptions}
+            setCurrentOptions={setCurrentOptions}
+          />
+          <CheckBox
+            name="GWIA"
+            description="Goodwill and intangible assets should be 0 or less"
             currentOptions={currentOptions}
             setCurrentOptions={setCurrentOptions}
           />
