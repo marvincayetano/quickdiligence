@@ -162,6 +162,7 @@ export const getAnalyze = async (req: Request, res: Response) => {
       data: financials.ICRatio,
       // Check if the IC ratio is 6 or higher
       isSixHigher: financials.ICRatio > 6,
+      isOneToSix: financials.ICRatio < 6 && financials.ICRatio > 1,
     },
     RGrowth: {
       data: financials.Revenue,

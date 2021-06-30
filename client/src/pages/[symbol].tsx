@@ -19,28 +19,28 @@ import {
 import { ResultContainer } from "../components/ResultContainer";
 
 interface AnalyzedData {
-    EPS: {
-        data: [number]
-        isPositiveNumber: boolean
-        isIncreasing: boolean
-      },
-      PERatio: { data: [number], isUndervalued: boolean, isOverValued: boolean },
-      IRatio: { data: [number], isSixHigher: boolean },
-      RGrowth: {
-        data: [string]
-        isIncreasing: boolean
-      },
-      IncomeLoss: { data: string, isNegative: boolean },
-      PnetIncome: { data: string, isPositive: boolean },
-      TotalCash: { data: string },
-      TotalAssets: {
-        data: { assets: string, liabilities: string },
-        isPositiveAL: boolean
-      },
-      SHEquity: {
-        data: [string],
-        isIncreasing: boolean
-      }
+  EPS: {
+    data: [number];
+    isPositiveNumber: boolean;
+    isIncreasing: boolean;
+  };
+  PERatio: { data: [number]; isUndervalued: boolean; isOverValued: boolean };
+  IRatio: { data: [number]; isSixHigher: boolean; isOneToSix: boolean };
+  RGrowth: {
+    data: [string];
+    isIncreasing: boolean;
+  };
+  IncomeLoss: { data: string; isNegative: boolean };
+  PnetIncome: { data: string; isPositive: boolean };
+  TotalCash: { data: string };
+  TotalAssets: {
+    data: { assets: string; liabilities: string };
+    isPositiveAL: boolean;
+  };
+  SHEquity: {
+    data: [string];
+    isIncreasing: boolean;
+  };
 }
 
 interface SymbolProps {
@@ -123,11 +123,12 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
         },
       })
       .then((res) => {
-        console.log(res);
         setAnalyzedData(res.data);
+        Nprogress.done();
       })
       .catch((err) => {
         console.log(err);
+        Nprogress.done();
       });
   };
 
@@ -168,7 +169,12 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
             setCurrentOptions={setCurrentOptions}
           />
           <Box p="0 2rem">
-            <Line type="Line" data={eps_data} options={eps_linechart_options} />
+            <Line
+              type="Line"
+              height={95}
+              data={eps_data}
+              options={eps_linechart_options}
+            />
           </Box>
           <CheckBox
             name="ROI"
@@ -189,21 +195,18 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
             setCurrentOptions={setCurrentOptions}
           />
           <ResultContainer>
-                  <div>
-                      <span style={{ paddingRight: "1rem", fontSize: "2rem", fontWeight: 400 }}>
-                        {
-                            analyzedData && analyzedData.PERatio.data
-                        }
-                      </span>
-                    {
-                        // TODO: Remove after test && There should always be data
-                        analyzedData && (
-                            analyzedData.PERatio.isOverValued?
-                            <Badge style={{ fontSize: "1.3rem" }} colorScheme="red">Overvalued</Badge> :
-                            <Badge style={{ fontSize: "1.3rem" }} colorScheme="green">Good</Badge>
-                        )
-                    }
-                  </div>
+            PE Ratio of &nbsp;
+            <p>{analyzedData && ` x${analyzedData.PERatio.data}`}</p>
+            is &nbsp;
+            {
+              // TODO: Remove after test && There should always be data
+              analyzedData &&
+                (analyzedData.PERatio.isOverValued ? (
+                  <Badge colorScheme="red">Overvalued</Badge>
+                ) : (
+                  <Badge colorScheme="green">Good</Badge>
+                ))
+            }
           </ResultContainer>
           <CheckBox
             name="IRATIO"
@@ -211,36 +214,110 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
             currentOptions={currentOptions}
             setCurrentOptions={setCurrentOptions}
           />
+          <ResultContainer>
+            Interest coverage ratio of &nbsp;
+            <p>{analyzedData && `${analyzedData.IRatio.data}`}</p>
+            is &nbsp;
+            {
+              // TODO: Remove after test && There should always be data
+              analyzedData &&
+                (analyzedData.IRatio.isSixHigher ? (
+                  <Badge colorScheme="green">Very Good</Badge>
+                ) : analyzedData.IRatio.isOneToSix ? (
+                  <Badge colorScheme="yellow">Good</Badge>
+                ) : (
+                  <Badge colorScheme="green">Bad</Badge>
+                ))
+            }
+          </ResultContainer>
           <CheckBox
             name="RGROWTH"
             description="Steady climb or revenue growth over the last 3 years"
             currentOptions={currentOptions}
             setCurrentOptions={setCurrentOptions}
           />
+          <Box p="0 2rem">
+            <Line
+              type="Line"
+              height={95}
+              data={eps_data}
+              options={eps_linechart_options}
+            />
+          </Box>
           <CheckBox
             name="INCOMELOSS"
             description="Positive operating income/loss"
             currentOptions={currentOptions}
             setCurrentOptions={setCurrentOptions}
           />
+          <ResultContainer>
+            Operating income of &nbsp;
+            <p>{analyzedData && `${analyzedData.IncomeLoss.data}`}</p>
+            is &nbsp;
+            {
+              // TODO: Remove after test && There should always be data
+              analyzedData &&
+                (analyzedData.IncomeLoss.isNegative ? (
+                  <Badge colorScheme="red">Bad</Badge>
+                ) : (
+                  <Badge colorScheme="green">Good</Badge>
+                ))
+            }
+          </ResultContainer>
           <CheckBox
             name="PNETINCOME"
             description="Positive net income"
             currentOptions={currentOptions}
             setCurrentOptions={setCurrentOptions}
           />
+          <ResultContainer>
+            Net income of &nbsp;
+            <p>{analyzedData && `${analyzedData.PnetIncome.data}`}</p>
+            is &nbsp;
+            {
+              // TODO: Remove after test && There should always be data
+              analyzedData &&
+                (analyzedData.PnetIncome.isPositive ? (
+                  <Badge colorScheme="green">Good</Badge>
+                ) : (
+                  <Badge colorScheme="red">Bad</Badge>
+                ))
+            }
+          </ResultContainer>
           <CheckBox
             name="CASH"
             description="A lot of total cash"
             currentOptions={currentOptions}
             setCurrentOptions={setCurrentOptions}
           />
+          <ResultContainer>
+            Total cash is $&nbsp;
+            <p>{analyzedData && `${analyzedData.TotalCash.data}`}</p>
+          </ResultContainer>
           <CheckBox
             name="AL"
             description="Higher assets than liabilities"
             currentOptions={currentOptions}
             setCurrentOptions={setCurrentOptions}
           />
+          <ResultContainer>
+            Assets of &nbsp;
+            <p>{analyzedData && `${analyzedData.TotalAssets.data.assets}`}</p>
+            and Liabilities of
+            <p>
+              {analyzedData && `${analyzedData.TotalAssets.data.liabilities}`}
+            </p>
+            is &nbsp;
+            {
+              // TODO: Remove after test && There should always be data
+              analyzedData &&
+                (analyzedData.TotalAssets.isPositiveAL ? (
+                  <Badge colorScheme="green">Good</Badge>
+                ) : (
+                  <Badge colorScheme="red">Bad</Badge>
+                ))
+            }
+          </ResultContainer>
           <CheckBox
             name="GWIA"
             description="Goodwill and intangible assets should be 0 or less"
@@ -259,6 +336,14 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
             currentOptions={currentOptions}
             setCurrentOptions={setCurrentOptions}
           />
+          <Box p="0 2rem">
+            <Line
+              type="Line"
+              height={95}
+              data={eps_data}
+              options={eps_linechart_options}
+            />
+          </Box>
         </Index__optionsTable>
       </Index__optionsContainer>
     </Layout>
