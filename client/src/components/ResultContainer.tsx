@@ -11,6 +11,10 @@ const Result__Container = styled.div`
   align-items: center;
   height: 3rem;
   margin-bottom: 4rem;
+  border-bottom: 1px solid var(--chakra-colors-gray-200);
+  margin-top: 2rem;
+  width: 80%;
+  align-self: center;
 
   p {
     padding-right: 1rem;

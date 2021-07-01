@@ -7,7 +7,7 @@ import express from "express";
 // import connectRedis from "connect-redis";
 import cors from "cors";
 
-import { COOKIE_NAME, __prod__ } from "./constants";
+import { __prod__ } from "./constants";
 import { getStockPrice, getAnalyze } from "./controllers/stock";
 
 const main = async () => {

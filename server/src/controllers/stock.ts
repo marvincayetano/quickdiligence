@@ -95,6 +95,7 @@ export const getAnalyze = async (req: Request, res: Response) => {
   const financials = await page.$$eval("div > span", (lists) => {
     // Interest coverage ratio = EBIT / Interest expense
     // Anything below 1 is bad
+
     return {
       ICRatio:
         parseFloat((lists[129] as HTMLElement).innerText) /
@@ -135,9 +136,9 @@ export const getAnalyze = async (req: Request, res: Response) => {
       TotalLiabilities: (lists[158] as HTMLElement).innerText,
       LongTermDebt: (lists[137] as HTMLElement).innerText,
       SHEquity: [
-        (lists[179] as HTMLElement).innerText,
-        (lists[180] as HTMLElement).innerText,
-        (lists[181] as HTMLElement).innerText,
+        (lists[184] as HTMLElement).innerText,
+        (lists[185] as HTMLElement).innerText,
+        (lists[186] as HTMLElement).innerText,
       ],
     };
   });
@@ -149,7 +150,7 @@ export const getAnalyze = async (req: Request, res: Response) => {
       isPositiveNumber: epsArr[2] ? epsArr[2] > 0 : epsArr[0] > 0,
       // Checks if the EPS is increasing each year
       isIncreasing:
-        epsArr[0] > epsArr[1] && epsArr[1] > epsArr[2] && epsArr[2] > epsArr[3]
+        epsArr[0] < epsArr[1] && epsArr[1] < epsArr[2] && epsArr[2] < epsArr[3]
           ? true
           : false,
     },
@@ -165,7 +166,7 @@ export const getAnalyze = async (req: Request, res: Response) => {
       isOneToSix: financials.ICRatio < 6 && financials.ICRatio > 1,
     },
     RGrowth: {
-      data: financials.Revenue,
+      data: financials.Revenue.reverse(),
       // Check if Revenue is increasing
       isIncreasing:
         parseInt(financials.Revenue[0]) > parseInt(financials.Revenue[1]) &&
@@ -210,6 +211,9 @@ export const getAnalyze = async (req: Request, res: Response) => {
           parseFloat(balanceSheet.SHEquity[2])
           ? true
           : false,
+    },
+    LTD: {
+      data: balanceSheet.LongTermDebt,
     },
   };
 

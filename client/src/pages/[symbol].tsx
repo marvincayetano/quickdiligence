@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 
@@ -27,7 +27,7 @@ interface AnalyzedData {
   PERatio: { data: [number]; isUndervalued: boolean; isOverValued: boolean };
   IRatio: { data: [number]; isSixHigher: boolean; isOneToSix: boolean };
   RGrowth: {
-    data: [string];
+    data: [number];
     isIncreasing: boolean;
   };
   IncomeLoss: { data: string; isNegative: boolean };
@@ -38,8 +38,11 @@ interface AnalyzedData {
     isPositiveAL: boolean;
   };
   SHEquity: {
-    data: [string];
+    data: [number];
     isIncreasing: boolean;
+  };
+  LTD: {
+    data: string;
   };
 }
 
@@ -56,46 +59,62 @@ const eps_linechart_options = {
       {
         ticks: {
           beginAtZero: true,
+          callback: function (value: any, index: any, values: any) {
+            return value / 1e6 + "M";
+          },
         },
       },
     ],
   },
 };
 
+const createLineChartData = (
+  labels: string[],
+  data: [number],
+  color: string
+) => {
+  return {
+    labels: labels,
+    datasets: [
+      {
+        data: data,
+        fill: false,
+        borderColor: "lightGray",
+        pointBackgroundColor: color,
+      },
+    ],
+  };
+};
+
 const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
   const router = useRouter();
   // TODO: Make this a constant array of objects that contains the name and description
   const [analyzedData, setAnalyzedData] = useState<AnalyzedData>();
-  const [currentOptions, setCurrentOptions] = useState([
-    "EPS",
-    "ROI",
-    "DEBT",
-    "PERATIO",
-    "IRATIO",
-    "RGROWTH",
-    "INCOMELOSS",
-    "PNETINCOME",
-    "CASH",
-    "AL",
-    "GWIA",
-    "LD",
-    "SHE",
-  ]) as any;
   const [isLoading, setIsLoading] = useState(false);
   const [price, setPrice] = useState(null);
+  const [news, setNews] = useState({} as any);
+  useEffect(() => {
+    const date = new Date();
+    date.setDate(date.getDate() - 5);
+    console.log(router.query.symbol);
 
-  const eps_data = {
-    labels: ["1", "2", "3", "4", "5", "6"],
-    datasets: [
-      {
-        label: "# of Votes",
-        data: [12, 19, 3, 5, 2, 3],
-        fill: false,
-        backgroundColor: "rgb(255, 99, 132)",
-        borderColor: "rgba(255, 99, 132, 0.2)",
-      },
-    ],
-  };
+    axios
+      .get(
+        `https://newsapi.org/v2/top-headlines?country="us"&q=${
+          // TODO: Change this to first name of the company
+          router.query.symbol
+        }&category=business&apiKey=${
+          process.env.NEXT_PUBLIC_NEWSAPI_KEY
+        }&from=${date.toISOString().split("T")[0]}&sortBy=publishedAt`
+      )
+      .then((result) => {
+        setNews(result);
+        console.log(result);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
 
   const onProcess = async () => {
     Nprogress.set(0.2);
@@ -103,11 +122,7 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
 
     // This get is getting the current price of the symbol
     await axios
-      .get(`http://localhost:3000/price/${router.query.symbol}`, {
-        params: {
-          currentOptions,
-        },
-      })
+      .get(`http://localhost:3000/price/${router.query.symbol}`)
       .then((res) => {
         setPrice(res.data);
       })
@@ -117,14 +132,12 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
 
     // This get is getting the results after analyzing the stock
     await axios
-      .get(`http://localhost:3000/analyze/${router.query.symbol}`, {
-        params: {
-          currentOptions,
-        },
-      })
+      .get(`http://localhost:3000/analyze/${router.query.symbol}`)
       .then((res) => {
         setAnalyzedData(res.data);
+        console.log(res.data);
         Nprogress.done();
+        setIsLoading(false);
       })
       .catch((err) => {
         console.log(err);
@@ -162,21 +175,44 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
       </Index__symbolContainer>
       <Index__optionsContainer>
         <Index__optionsTable>
-          <CheckBox
-            name="EPS"
-            description="Positive number EPS(Earnings per share) and continued increase"
-            currentOptions={currentOptions}
-            setCurrentOptions={setCurrentOptions}
-          />
+          <CheckBox description="Positive number EPS(earnings-per-share) and continued increase" />
           <Box p="0 2rem">
-            <Line
-              type="Line"
-              height={95}
-              data={eps_data}
-              options={eps_linechart_options}
-            />
+            {analyzedData && (
+              <Line
+                type="Line"
+                height={95}
+                data={() => {
+                  const currentYear = new Date().getFullYear();
+                  const labels = analyzedData?.EPS.data.map((_, i) => {
+                    return (currentYear - i).toString();
+                  });
+                  return createLineChartData(
+                    labels.reverse(),
+                    analyzedData?.EPS.data,
+                    analyzedData?.EPS.isIncreasing ? "green" : "red"
+                  );
+                }}
+                options={eps_linechart_options}
+              />
+            )}
           </Box>
-          <CheckBox
+          {analyzedData && (
+            <ResultContainer>
+              EPS is &nbsp;
+              {analyzedData.EPS.isPositiveNumber ? (
+                <Badge colorScheme="green">positive</Badge>
+              ) : (
+                <Badge colorScheme="red">negative</Badge>
+              )}
+              &nbsp; and is &nbsp;
+              {analyzedData.EPS.isIncreasing ? (
+                <Badge colorScheme="green">increasing</Badge>
+              ) : (
+                <Badge colorScheme="red">not increasing</Badge>
+              )}
+            </ResultContainer>
+          )}
+          {/* <CheckBox
             name="ROI"
             description="Return on investment continued growth"
             currentOptions={currentOptions}
@@ -187,163 +223,154 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
             description="DEBT payback time (Long term debt or free cash flow). Must be 3years or less"
             currentOptions={currentOptions}
             setCurrentOptions={setCurrentOptions}
-          />
-          <CheckBox
-            name="PERATIO"
-            description="Is the stock trading at a reasonable price? PE Ratio = Stock price/EPS. Must be 15 or less"
-            currentOptions={currentOptions}
-            setCurrentOptions={setCurrentOptions}
-          />
+          /> */}
+          <CheckBox description="Is the stock trading at a reasonable price? PE Ratio = Stock price/EPS. Must be 15 or less" />
           <ResultContainer>
             PE Ratio of &nbsp;
             <p>{analyzedData && ` x${analyzedData.PERatio.data}`}</p>
             is &nbsp;
-            {
-              // TODO: Remove after test && There should always be data
-              analyzedData &&
-                (analyzedData.PERatio.isOverValued ? (
-                  <Badge colorScheme="red">Overvalued</Badge>
-                ) : (
-                  <Badge colorScheme="green">Good</Badge>
-                ))
-            }
+            {analyzedData &&
+              (analyzedData.PERatio.isOverValued ? (
+                <Badge colorScheme="red">Overvalued</Badge>
+              ) : (
+                <Badge colorScheme="green">Good</Badge>
+              ))}
           </ResultContainer>
-          <CheckBox
-            name="IRATIO"
-            description="Interest coverage ratio of 6 or higher"
-            currentOptions={currentOptions}
-            setCurrentOptions={setCurrentOptions}
-          />
+          <CheckBox description="Interest coverage ratio of 6 or higher" />
           <ResultContainer>
             Interest coverage ratio of &nbsp;
             <p>{analyzedData && `${analyzedData.IRatio.data}`}</p>
             is &nbsp;
-            {
-              // TODO: Remove after test && There should always be data
-              analyzedData &&
-                (analyzedData.IRatio.isSixHigher ? (
-                  <Badge colorScheme="green">Very Good</Badge>
-                ) : analyzedData.IRatio.isOneToSix ? (
-                  <Badge colorScheme="yellow">Good</Badge>
-                ) : (
-                  <Badge colorScheme="green">Bad</Badge>
-                ))
-            }
+            {analyzedData &&
+              (analyzedData.IRatio.isSixHigher ? (
+                <Badge colorScheme="green">Very Good</Badge>
+              ) : analyzedData.IRatio.isOneToSix ? (
+                <Badge colorScheme="yellow">Good</Badge>
+              ) : (
+                <Badge colorScheme="green">Bad</Badge>
+              ))}
           </ResultContainer>
-          <CheckBox
-            name="RGROWTH"
-            description="Steady climb or revenue growth over the last 3 years"
-            currentOptions={currentOptions}
-            setCurrentOptions={setCurrentOptions}
-          />
+          <CheckBox description="Steady climb or revenue growth over the last 3 years" />
           <Box p="0 2rem">
-            <Line
-              type="Line"
-              height={95}
-              data={eps_data}
-              options={eps_linechart_options}
-            />
+            {analyzedData && (
+              <Line
+                type="Line"
+                height={95}
+                data={() => {
+                  const currentYear = new Date().getFullYear();
+                  const labels = analyzedData?.RGrowth.data.map((_, i) => {
+                    return (currentYear - i).toString();
+                  });
+                  return createLineChartData(
+                    labels.reverse(),
+                    analyzedData?.RGrowth.data,
+                    analyzedData?.EPS.isIncreasing ? "green" : "red"
+                  );
+                }}
+                options={eps_linechart_options}
+              />
+            )}
           </Box>
-          <CheckBox
-            name="INCOMELOSS"
-            description="Positive operating income/loss"
-            currentOptions={currentOptions}
-            setCurrentOptions={setCurrentOptions}
-          />
+          {analyzedData && (
+            <ResultContainer>
+              Revenue growth is &nbsp;
+              {analyzedData.RGrowth.isIncreasing ? (
+                <Badge colorScheme="green">increasing</Badge>
+              ) : (
+                <Badge colorScheme="red">not increasing</Badge>
+              )}
+            </ResultContainer>
+          )}
+          <CheckBox description="Positive operating income/loss" />
           <ResultContainer>
-            Operating income of &nbsp;
+            Operating income of $
             <p>{analyzedData && `${analyzedData.IncomeLoss.data}`}</p>
             is &nbsp;
-            {
-              // TODO: Remove after test && There should always be data
-              analyzedData &&
-                (analyzedData.IncomeLoss.isNegative ? (
-                  <Badge colorScheme="red">Bad</Badge>
-                ) : (
-                  <Badge colorScheme="green">Good</Badge>
-                ))
-            }
+            {analyzedData &&
+              (analyzedData.IncomeLoss.isNegative ? (
+                <Badge colorScheme="red">Bad</Badge>
+              ) : (
+                <Badge colorScheme="green">Good</Badge>
+              ))}
           </ResultContainer>
-          <CheckBox
-            name="PNETINCOME"
-            description="Positive net income"
-            currentOptions={currentOptions}
-            setCurrentOptions={setCurrentOptions}
-          />
+          <CheckBox description="Positive net income" />
           <ResultContainer>
-            Net income of &nbsp;
+            Net income of $
             <p>{analyzedData && `${analyzedData.PnetIncome.data}`}</p>
-            is &nbsp;
-            {
-              // TODO: Remove after test && There should always be data
-              analyzedData &&
-                (analyzedData.PnetIncome.isPositive ? (
-                  <Badge colorScheme="green">Good</Badge>
-                ) : (
-                  <Badge colorScheme="red">Bad</Badge>
-                ))
-            }
+            is &nbsp;{" "}
+            {analyzedData &&
+              (analyzedData.PnetIncome.isPositive ? (
+                <Badge colorScheme="green">Good</Badge>
+              ) : (
+                <Badge colorScheme="red">Bad</Badge>
+              ))}
           </ResultContainer>
-          <CheckBox
-            name="CASH"
-            description="A lot of total cash"
-            currentOptions={currentOptions}
-            setCurrentOptions={setCurrentOptions}
-          />
+          <CheckBox description="A lot of total cash" />
           <ResultContainer>
-            Total cash is $&nbsp;
+            Total cash of $
             <p>{analyzedData && `${analyzedData.TotalCash.data}`}</p>
           </ResultContainer>
-          <CheckBox
-            name="AL"
-            description="Higher assets than liabilities"
-            currentOptions={currentOptions}
-            setCurrentOptions={setCurrentOptions}
-          />
+          <CheckBox description="Higher assets than liabilities" />
           <ResultContainer>
             Assets of &nbsp;
             <p>{analyzedData && `${analyzedData.TotalAssets.data.assets}`}</p>
-            and Liabilities of
+            and Liabilities of &nbsp;
             <p>
               {analyzedData && `${analyzedData.TotalAssets.data.liabilities}`}
             </p>
             is &nbsp;
-            {
-              // TODO: Remove after test && There should always be data
-              analyzedData &&
-                (analyzedData.TotalAssets.isPositiveAL ? (
-                  <Badge colorScheme="green">Good</Badge>
-                ) : (
-                  <Badge colorScheme="red">Bad</Badge>
-                ))
-            }
+            {analyzedData &&
+              (analyzedData.TotalAssets.isPositiveAL ? (
+                <Badge colorScheme="green">Good</Badge>
+              ) : (
+                <Badge colorScheme="red">Bad</Badge>
+              ))}
           </ResultContainer>
-          <CheckBox
+          {/* <CheckBox
             name="GWIA"
             description="Goodwill and intangible assets should be 0 or less"
             currentOptions={currentOptions}
             setCurrentOptions={setCurrentOptions}
-          />
-          <CheckBox
-            name="LD"
-            description="Long term debt. Less is better"
-            currentOptions={currentOptions}
-            setCurrentOptions={setCurrentOptions}
-          />
-          <CheckBox
-            name="SHE"
-            description="Stock holder equity. Want this to see growth over the past 3 years"
-            currentOptions={currentOptions}
-            setCurrentOptions={setCurrentOptions}
-          />
+          /> */}
+          <CheckBox description="Long term debt. Less is better" />
+          <ResultContainer>
+            Long-term debt of &nbsp;
+            <p>{analyzedData && `$${analyzedData.LTD.data}`}</p>
+          </ResultContainer>
+          <CheckBox description="Stock holder equity. Want this to see growth over the past 3 years" />
           <Box p="0 2rem">
-            <Line
-              type="Line"
-              height={95}
-              data={eps_data}
-              options={eps_linechart_options}
-            />
+            {analyzedData && (
+              <Line
+                type="Line"
+                height={95}
+                data={() => {
+                  const currentYear = new Date().getFullYear();
+                  const labels = analyzedData?.SHEquity.data.map((_, i) => {
+                    return (currentYear - i).toString();
+                  });
+                  return createLineChartData(
+                    labels.reverse(),
+                    analyzedData?.SHEquity.data,
+                    analyzedData?.SHEquity.isIncreasing ? "green" : "red"
+                  );
+                }}
+                options={eps_linechart_options}
+              />
+            )}
           </Box>
+          {analyzedData && (
+            <ResultContainer>
+              Revenue growth is &nbsp;
+              {
+                // TODO: Remove after test && There should always be data
+                analyzedData.SHEquity.isIncreasing ? (
+                  <Badge colorScheme="green">increasing</Badge>
+                ) : (
+                  <Badge colorScheme="red">not increasing</Badge>
+                )
+              }
+            </ResultContainer>
+          )}
         </Index__optionsTable>
       </Index__optionsContainer>
     </Layout>

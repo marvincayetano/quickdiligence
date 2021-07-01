@@ -70,7 +70,7 @@ const Nav__listItem = styled.li`
 const Nav__listSuppBtn = styled.li`
   padding-left: 2rem;
   a {
-    color: #fff;
+    color: #f05024;
     padding-left: 2.2rem;
     padding-right: 2.2rem;
     padding-top: 1.2rem;
@@ -79,7 +79,7 @@ const Nav__listSuppBtn = styled.li`
     font-weight: 700;
     border-style: none;
     border-radius: 9999px;
-    background-color: #c7c8ca;
+    background-color: #fff;
     border-color: var(--chakra-colors-gray-200);
     outline: 2px solid transparent;
     outline-offset: 2px;
