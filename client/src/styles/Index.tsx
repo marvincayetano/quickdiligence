@@ -31,6 +31,7 @@ const Index__optionsContainer = styled.div`
   background: #f9f7f8;
   justify-content: center;
   padding: 1.5rem;
+  min-height: 5rem;
 `;
 
 const Index__optionsTable = styled.div`

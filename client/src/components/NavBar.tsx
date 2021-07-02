@@ -132,11 +132,6 @@ export const NavBar: React.FC<NavBarProps> = ({ setFoundStock }) => {
               </Nav__listItem>
             </Nav__search>
             <Nav__support>
-              <Nav__listItem>
-                <a href="">
-                  <MoonIcon />
-                </a>
-              </Nav__listItem>
               <Nav__listSuppBtn>
                 <a href="">
                   <span>♥️</span> Support️
