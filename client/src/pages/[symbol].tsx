@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 
-import { Button } from "@chakra-ui/react";
+import { Button, Collapse } from "@chakra-ui/react";
 import { Layout } from "../components/Layout";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import Nprogress from "nprogress";
@@ -12,8 +12,10 @@ import {
   Index__name,
   Index__symbolContainer,
   Index__optionsContainer,
+  Index__optionsTable,
 } from "../styles/Index";
-import { AnalyzeData, AnalyzedDataInterface } from "../components/AnalyzeData";
+import { AnalyzeData, AnalyzeDataInterface } from "../components/AnalyzeData";
+import { News, NewsInterface } from "../components/News";
 
 interface SymbolProps {
   foundStock: any;
@@ -22,39 +24,31 @@ interface SymbolProps {
 const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
   const router = useRouter();
   // TODO: Make this a constant array of objects that contains the name and description
-  const [analyzedData, setAnalyzedData] = useState<AnalyzedDataInterface>();
+  const [analyzedData, setAnalyzedData] = useState<AnalyzeDataInterface>();
   const [isLoading, setIsLoading] = useState(false);
   const [price, setPrice] = useState(null);
   const [news, setNews] = useState({} as any);
   useEffect(() => {
     const date = new Date();
     date.setDate(date.getDate() - 5);
-    console.log(router.query.symbol);
 
     axios
       .get(
-        `https://newsapi.org/v2/top-headlines?country="us"&q=${
+        `https://newsapi.org/v2/top-headlines?q=${
           // TODO: Change this to first name of the company
-          router.query.symbol
-        }&category=business&apiKey=${
-          process.env.NEXT_PUBLIC_NEWSAPI_KEY
-        }&from=${date.toISOString().split("T")[0]}&sortBy=publishedAt`
+          foundStock.name.split(" ")[0]
+        }&category=business&apiKey=${process.env.NEXT_PUBLIC_NEWSAPI_KEY}`
       )
       .then((result) => {
-        setNews(result);
+        setNews(result.data);
         console.log(result);
       })
       .catch((err) => {
         console.error(err);
       });
-  }, []);
-
-  const onProcess = async () => {
-    Nprogress.set(0.2);
-    setIsLoading(true);
 
     // This get is getting the current price of the symbol
-    await axios
+    axios
       .get(`http://localhost:3000/price/${router.query.symbol}`)
       .then((res) => {
         setPrice(res.data);
@@ -62,6 +56,11 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
       .catch((err) => {
         console.log(err);
       });
+  }, [foundStock]);
+
+  const onProcess = async () => {
+    Nprogress.set(0.2);
+    setIsLoading(true);
 
     // This get is getting the results after analyzing the stock
     await axios
@@ -106,9 +105,21 @@ const Symbol: React.FC<SymbolProps> = ({ foundStock }) => {
         </div>
       </Index__symbolContainer>
 
-      <Index__optionsContainer>
-        {analyzedData && <AnalyzeData analyzedData={analyzedData} />}
-      </Index__optionsContainer>
+      <Collapse in={analyzedData !== undefined} animateOpacity>
+        <Index__optionsContainer>
+          {analyzedData && <AnalyzeData analyzedData={analyzedData} />}
+        </Index__optionsContainer>
+      </Collapse>
+      <Collapse in={news !== undefined} animateOpacity>
+        <Index__optionsContainer>
+          <Index__optionsTable style={{ width: "auto" }}>
+            {news.status === "ok" &&
+              news.articles.map((n: NewsInterface) => (
+                <News key={n.url} news={n} />
+              ))}
+          </Index__optionsTable>
+        </Index__optionsContainer>
+      </Collapse>
     </Layout>
   );
 };

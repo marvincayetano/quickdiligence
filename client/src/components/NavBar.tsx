@@ -3,7 +3,7 @@ import NextLink from "next/link";
 import Nprogress from "nprogress";
 import axios from "axios";
 
-import { MoonIcon, SearchIcon } from "@chakra-ui/icons";
+import { SearchIcon } from "@chakra-ui/icons";
 
 import {
   Modal,
@@ -134,7 +134,7 @@ export const NavBar: React.FC<NavBarProps> = ({ setFoundStock }) => {
             <Nav__support>
               <Nav__listSuppBtn>
                 <a href="">
-                  <span>♥️</span> Support️
+                  <span>♥️</span>
                 </a>
               </Nav__listSuppBtn>
             </Nav__support>

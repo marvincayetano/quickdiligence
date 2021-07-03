@@ -6,7 +6,7 @@ import { Index__optionsTable } from "../styles/Index";
 import { CheckBox } from "./CheckBox";
 import { ResultContainer } from "./ResultContainer";
 
-export interface AnalyzedDataInterface {
+export interface AnalyzeDataInterface {
   EPS: {
     data: [number];
     isPositiveNumber: boolean;
@@ -43,7 +43,7 @@ const eps_linechart_options = {
       {
         ticks: {
           beginAtZero: true,
-          callback: function (value: any, index: any, values: any) {
+          callback: function (value: any, _: any, __: any) {
             return value / 1e6 + "M";
           },
         },
@@ -71,7 +71,7 @@ const createLineChartData = (
 };
 
 interface AnalyzeDataProps {
-  analyzedData: AnalyzedDataInterface | undefined;
+  analyzedData: AnalyzeDataInterface | undefined;
 }
 
 export const AnalyzeData: React.FC<AnalyzeDataProps> = ({ analyzedData }) => {

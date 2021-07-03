@@ -7,7 +7,6 @@ import {
 } from "urql";
 import { pipe, tap } from "wonka";
 import Router from "next/router";
-import { isServer } from "./isServer";
 
 const errorExchange: Exchange =
   ({ forward }) =>
@@ -61,11 +60,8 @@ const cursorPagination = (): Resolver => {
   };
 };
 
-export const createUrqlClient = (ssrExchange: any, ctx: any) => {
+export const createUrqlClient = (ssrExchange: any, _: any) => {
   let cookie = "";
-  if (isServer()) {
-    cookie = ctx?.req?.headers?.cookie;
-  }
 
   return {
     url: "http://localhost:3000/graphql",
