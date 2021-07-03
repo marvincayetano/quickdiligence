@@ -6,9 +6,11 @@ import { SearchIcon } from "@chakra-ui/icons";
 
 import { Nav__icon, Nav__logo, Nav__listItem } from "../styles/Header";
 
-interface MainProps {}
+interface MainProps {
+  setInputClick: any;
+}
 
-export const Main: React.FC<MainProps> = ({}) => {
+export const Main: React.FC<MainProps> = ({ setInputClick }) => {
   return (
     <Main__container>
       <Hero__container>
@@ -31,6 +33,9 @@ export const Main: React.FC<MainProps> = ({}) => {
             aria-autocomplete="list"
             autoComplete="false"
             placeholder="Search for the stock"
+            onClick={() => {
+              setInputClick(true);
+            }}
           />
           <div>
             <SearchIcon />

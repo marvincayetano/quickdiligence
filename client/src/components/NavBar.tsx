@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import NextLink from "next/link";
 import Nprogress from "nprogress";
 import axios from "axios";
@@ -35,6 +35,11 @@ interface NavBarProps {
 export const NavBar: React.FC<NavBarProps> = ({ setFoundStock }) => {
   // This is for how long before search starts
   const DONE_TYPING_INTERVAL = 3000;
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  useEffect(() => {
+    if (inputRef.current) inputRef.current.focus();
+  }, []);
 
   const [stock, setStock] = useState("");
   const [stocks, setStocks] = useState<any[]>([]);
@@ -83,6 +88,7 @@ export const NavBar: React.FC<NavBarProps> = ({ setFoundStock }) => {
                     type="text"
                     maxLength={64}
                     spellCheck="false"
+                    ref={inputRef}
                     aria-autocomplete="list"
                     autoComplete="false"
                     placeholder="Search for the stock"
