@@ -129,7 +129,7 @@ export const AnalyzeData: React.FC<AnalyzeDataProps> = ({ analyzedData }) => {
       <CheckBox description="Is the stock trading at a reasonable price? PE Ratio = Stock price/EPS. Must be 15 or less" />
       <ResultContainer>
         PE Ratio of &nbsp;
-        <p>{analyzedData && ` x${analyzedData.PERatio.data}`}</p>
+        <p>{analyzedData && ` ${analyzedData.PERatio.data}`}</p>
         is &nbsp;
         {analyzedData &&
           (analyzedData.PERatio.isOverValued ? (

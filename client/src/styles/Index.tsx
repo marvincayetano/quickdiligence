@@ -5,15 +5,11 @@ const Index__symbolContainer = styled.div`
   background: #f9f7f8;
   justify-content: center;
   align-items: center;
-  flex-direction: row;
 
-  .btn__analyze {
-    padding-left: 2rem;
-
-    button {
-      font-size: 2rem;
-      height: 4rem;
-    }
+  .info__container {
+    display: flex;
+    width: 85vh;
+    justify-content: space-between;
   }
 `;
 
@@ -46,10 +42,24 @@ const Index__optionsTable = styled.div`
   border-radius: var(--chakra-radii-md);
 `;
 
+const Index__score = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  span {
+    font-size: 2rem;
+    font-weight: 500;
+    letter-spacing: 0.3rem;
+    text-align: center;
+  }
+`;
+
 export {
   Index__symbolContainer,
   Index__optionsContainer,
   Index__optionsTable,
   Index__symbol,
   Index__name,
+  Index__score,
 };

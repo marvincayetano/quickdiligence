@@ -1,6 +1,5 @@
 import React from "react";
 
-import { useRouter } from "next/router";
 import {
   Nav__listItem,
   Nav__searchResult,
@@ -20,12 +19,9 @@ export const ModalList: React.FC<ModalListProps> = ({
   setFoundStock,
   onClose,
 }) => {
-  const router = useRouter();
-
   const onClick = (e: any) => {
     e.preventDefault();
     setFoundStock({ symbol, name });
-    router.push(`/${symbol}`);
     onClose();
   };
 
