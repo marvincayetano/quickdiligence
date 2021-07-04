@@ -139,8 +139,8 @@ export const NavBar: React.FC<NavBarProps> = ({ setFoundStock }) => {
             </Nav__search>
             <Nav__support>
               <Nav__listSuppBtn>
-                <a href="">
-                  <span>♥️</span>
+                <a href="https://github.com/marvincayetano/quickdiligence">
+                  <span>Github ♥️</span>
                 </a>
               </Nav__listSuppBtn>
             </Nav__support>

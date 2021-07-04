@@ -1,88 +1,42 @@
 import { Request, Response } from "express";
 import puppeteer from "puppeteer";
 
-export const getStockPrice = async (req: Request, res: Response) => {
-  let browser = await puppeteer.launch();
-  let page = await browser.newPage();
+// To create a proper table for analysis
+const cleanArray = (elArr: string[]) => {
+  console.log(elArr);
+  return elArr.map((block, index) => {
+    const colonAdded = block.replace(/\n|\t/g, ":");
+    if (index === 0) {
+      const dates = colonAdded
+        .replace("Breakdown:TTM", "")
+        .match(/.{1,10}/g) as string[];
+      return ["Breakdown", "TTM", ...dates];
+    }
 
-  try {
-    await page.goto(`https://ca.finance.yahoo.com/quote/${req.params.symbol}`, {
-      waitUntil: "networkidle0",
-    });
-  } catch (err) {
-    console.log(err);
-  }
-
-  await page
-    .evaluate(
-      () =>
-        (
-          document.querySelectorAll(
-            "#quote-summary > div > table > tbody > tr > td > span"
-          )[1] as HTMLElement
-        )?.innerText
-    )
-    .then((result) => {
-      res.send(result);
-    });
+    return colonAdded.split(/[:*]+/);
+  });
 };
 
-// TODO: document.querySelector('div[data-reactId="286"]')
-export const getAnalyze = async (req: Request, res: Response) => {
-  console.log("ANALYZE SYMBOL", req.params.symbol);
+// Get the current stock price here
+export const getStockPrice = async (req: Request, res: Response) => {};
+
+// Analyze everything else here
+// export const getAnalyze = async (req: Request, res: Response) => {
+export const getAnalyze = async () => {
+  //   console.log("ANALYZE SYMBOL", req.params.symbol);
+  const req = {
+    params: {
+      symbol: "TSLA",
+    },
+  };
 
   let browser = await puppeteer.launch();
-  let page = await browser.newPage();
+  const page = await browser.newPage();
 
   // EPS
   try {
     await page.goto(
-      `https://ca.finance.yahoo.com/quote/${req.params.symbol}/analysis`,
-      {
-        waitUntil: "networkidle0",
-      }
-    );
-  } catch (err) {
-    console.log(err);
-  }
-
-  // epsArr contains the eps from the last 2 years and the future year eg. 2019 2020 2021 2022
-  const epsArr = await page.$$eval(
-    "table > tbody > tr:nth-child(5) > td",
-    (lists) => {
-      const contents = [];
-
-      // TODO: Not all stocks have 4 years of eps history in yahoo finance
-      for (var i = 1; i <= 4; i++) {
-        contents.push(
-          parseFloat(lists[i].querySelector("span")?.innerText as string)
-        );
-      }
-
-      return contents;
-    }
-  );
-
-  // PE Ratio
-  try {
-    await page.goto(`https://ca.finance.yahoo.com/quote/${req.params.symbol}`, {
-      waitUntil: "networkidle0",
-    });
-  } catch (err) {
-    console.log(err);
-  }
-
-  // PERatio is for checking if the stock is over or under valued
-  const PERatio = await page.$$eval(
-    "div > table > tbody > tr > td",
-    (lists) => {
-      return parseFloat((lists[21] as HTMLElement).innerText);
-    }
-  );
-
-  // FINANCIALS
-  try {
-    await page.goto(
+      //   `https://ca.finance.yahoo.com/quote/${req.params.symbol}/analysis`,
       `https://ca.finance.yahoo.com/quote/${req.params.symbol}/financials`,
       {
         waitUntil: "networkidle0",
@@ -92,133 +46,12 @@ export const getAnalyze = async (req: Request, res: Response) => {
     console.log(err);
   }
 
-  const financials = await page.$$eval("div > span", (lists) => {
-    // Interest coverage ratio = EBIT / Interest expense
-    // Anything below 1 is bad
+  const tblAnalysis = await page.$x("//div[contains(@class, 'D(tbr)')]");
+  const els = await page.evaluate(
+    (...tblAnalysis) => tblAnalysis.map((e) => e.innerText),
+    ...tblAnalysis
+  );
+  console.log(cleanArray(els));
 
-    return {
-      ICRatio:
-        parseFloat((lists[129] as HTMLElement).innerText) /
-        parseFloat((lists[76] as HTMLElement).innerText),
-      // Revenue
-      // Checking if the revenue is increasing over the years
-      Revenue: [
-        (lists[29] as HTMLElement).innerText,
-        (lists[30] as HTMLElement).innerText,
-        (lists[31] as HTMLElement).innerText,
-      ],
-
-      // Operating income loss
-      // Shouldn't be negative
-      OILoss: (lists[70] as HTMLElement).innerText,
-      NIncome: (lists[108] as HTMLElement).innerText,
-    };
-  });
-
-  // FINANCIALS
-  try {
-    await page.goto(
-      `https://ca.finance.yahoo.com/quote/${req.params.symbol}/balance-sheet`,
-      {
-        waitUntil: "networkidle0",
-      }
-    );
-  } catch (err) {
-    console.log(err);
-  }
-
-  const balanceSheet = await page.$$eval("div > span", (lists) => {
-    // Interest coverage ratio = EBIT / Interest expense
-    // Anything below 1 is bad
-    return {
-      TotalCash: (lists[41] as HTMLElement).innerText,
-      TotalAssets: (lists[102] as HTMLElement).innerText,
-      TotalLiabilities: (lists[158] as HTMLElement).innerText,
-      LongTermDebt: (lists[137] as HTMLElement).innerText,
-      SHEquity: [
-        (lists[184] as HTMLElement).innerText,
-        (lists[185] as HTMLElement).innerText,
-        (lists[186] as HTMLElement).innerText,
-      ],
-    };
-  });
-
-  const returnObject = {
-    EPS: {
-      data: epsArr,
-      // Checks if the current EPS is positive
-      isPositiveNumber: epsArr[2] ? epsArr[2] > 0 : epsArr[0] > 0,
-      // Checks if the EPS is increasing each year
-      isIncreasing:
-        epsArr[0] < epsArr[1] && epsArr[1] < epsArr[2] && epsArr[2] < epsArr[3]
-          ? true
-          : false,
-    },
-    PERatio: {
-      data: PERatio,
-      isUndervalued: PERatio < 14,
-      isOverValued: PERatio > 17,
-    },
-    IRatio: {
-      data: financials.ICRatio,
-      // Check if the IC ratio is 6 or higher
-      isSixHigher: financials.ICRatio > 6,
-      isOneToSix: financials.ICRatio < 6 && financials.ICRatio > 1,
-    },
-    RGrowth: {
-      data: financials.Revenue.reverse(),
-      // Check if Revenue is increasing
-      isIncreasing:
-        parseInt(financials.Revenue[0]) > parseInt(financials.Revenue[1]) &&
-        parseInt(financials.Revenue[1]) > parseInt(financials.Revenue[2])
-          ? true
-          : false,
-    },
-    IncomeLoss: {
-      data: financials.OILoss,
-      isNegative:
-        (financials.OILoss as any).charAt[1] &&
-        (financials.OILoss as any).charAt[0] === "-"
-          ? true
-          : false,
-    },
-    PnetIncome: {
-      data: financials.NIncome,
-      isPositive:
-        (financials.NIncome as any).charAt[1] &&
-        (financials.NIncome as any).charAt[0] === "-"
-          ? false
-          : true,
-    },
-    TotalCash: {
-      data: balanceSheet.TotalCash,
-    },
-    TotalAssets: {
-      data: {
-        assets: balanceSheet.TotalAssets,
-        liabilities: balanceSheet.TotalLiabilities,
-      },
-      isPositiveAL:
-        parseFloat(balanceSheet.TotalAssets) >
-        parseFloat(balanceSheet.TotalLiabilities),
-    },
-    SHEquity: {
-      data: balanceSheet.SHEquity,
-      isIncreasing:
-        parseFloat(balanceSheet.SHEquity[0]) >
-          parseFloat(balanceSheet.SHEquity[1]) &&
-        parseFloat(balanceSheet.SHEquity[1]) >
-          parseFloat(balanceSheet.SHEquity[2])
-          ? true
-          : false,
-    },
-    LTD: {
-      data: balanceSheet.LongTermDebt,
-    },
-  };
-
-  console.log(returnObject);
-
-  await browser.close();
-  res.send(returnObject);
+  //   res.send({});
 };
