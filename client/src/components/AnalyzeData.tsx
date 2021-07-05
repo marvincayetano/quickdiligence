@@ -33,6 +33,8 @@ export interface AnalyzeDataInterface {
   LTD: {
     data: string;
   };
+  // TODO: Goodwill and intagible assets
+  GWIA: {};
 }
 
 const eps_linechart_options = {
@@ -90,7 +92,7 @@ export const AnalyzeData: React.FC<AnalyzeDataProps> = ({ analyzedData }) => {
                 return (currentYear - i).toString();
               });
               return createLineChartData(
-                labels.reverse(),
+                labels,
                 analyzedData?.EPS.data,
                 analyzedData?.EPS.isIncreasing ? "green" : "red"
               );
