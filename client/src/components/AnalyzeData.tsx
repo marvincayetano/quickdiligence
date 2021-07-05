@@ -7,6 +7,7 @@ import { CheckBox } from "./CheckBox";
 import { ResultContainer } from "./ResultContainer";
 
 export interface AnalyzeDataInterface {
+  Price: number;
   EPS: {
     data: [number];
     isPositiveNumber: boolean;

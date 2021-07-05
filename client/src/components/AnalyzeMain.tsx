@@ -53,20 +53,11 @@ const AnalyzeMain: React.FC<AnalyzeMainProps> = ({}) => {
           console.error(err);
         });
 
-      // This get is getting the current price of the symbol
-      axios
-        .get(`http://localhost:3000/price/${foundStock.symbol}`)
-        .then((res) => {
-          setPrice(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-
       // This get is getting the results after analyzing the stock
       axios
         .get(`http://localhost:3000/analyze/${foundStock.symbol}`)
         .then((res) => {
+          setPrice(res.data.price);
           setAnalyzedData(res.data);
           console.log(res.data);
           Nprogress.done();

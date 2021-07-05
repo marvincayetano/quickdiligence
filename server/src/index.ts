@@ -8,7 +8,7 @@ import express from "express";
 import cors from "cors";
 
 import { __prod__ } from "./constants";
-import { getStockPrice, getAnalyze } from "./controllers/stock";
+import { getAnalyze } from "./controllers/stock";
 
 const main = async () => {
   const app = express();
@@ -44,7 +44,6 @@ const main = async () => {
   //     })
   //   );
 
-  app.get("/price/:symbol", getStockPrice);
   app.get("/analyze/:symbol", getAnalyze);
 
   app.listen(parseInt(process.env.PORT), () => {
