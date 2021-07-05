@@ -92,7 +92,7 @@ const AnalyzeMain: React.FC<AnalyzeMainProps> = ({}) => {
                 {price && `$${price}`}
               </Index__name>
               <Index__score>
-                <span>quick score</span>
+                <span>score</span>
                 <span style={{ color: "green" }}>5/12</span>
               </Index__score>
             </div>

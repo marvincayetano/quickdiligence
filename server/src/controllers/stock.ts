@@ -97,6 +97,7 @@ export const getAnalyze = async (req: Request, res: Response) => {
   );
 
   const incomeStatement = cleanArray(els);
+  console.log("INCOME STATEMENT", incomeStatement);
 
   // Balance Sheet
   try {
@@ -195,14 +196,14 @@ export const getAnalyze = async (req: Request, res: Response) => {
       data: incomeStatement["Operating Income or Loss"],
       isNegative:
         incomeStatement["Operating Income or Loss"][0] !== "-" &&
-        incomeStatement["Operating Income or Loss"][0].charAt[0] === "-",
+        incomeStatement["Operating Income or Loss"][0].charAt(0) === "-",
     },
     // Positive Net Income
     PnetIncome: {
       data: incomeStatement["Net Income"],
       isPositive:
         incomeStatement["Net Income"][0] !== "-" &&
-        incomeStatement["Net Income"][0].charAt[0] !== "-",
+        incomeStatement["Net Income"][0].charAt(0) !== "-",
     },
     TotalCash: {
       data: balanceSheetArr["Total Cash"][0],
@@ -213,8 +214,8 @@ export const getAnalyze = async (req: Request, res: Response) => {
         liabilities: balanceSheetArr["Total Liabilities"][0],
       },
       isPositiveAL:
-        parseFloat(balanceSheetArr["Total Assets"]) >
-        parseFloat(balanceSheetArr["Total Liabilities"]),
+        parseInt(balanceSheetArr["Total Assets"][0]) >
+        parseInt(balanceSheetArr["Total Liabilities"][0]),
     },
     // Share holders quity
     SHEquity: {

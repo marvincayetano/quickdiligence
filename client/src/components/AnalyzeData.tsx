@@ -14,20 +14,20 @@ export interface AnalyzeDataInterface {
     isIncreasing: boolean;
   };
   PERatio: { data: [number]; isUndervalued: boolean; isOverValued: boolean };
-  IRatio: { data: [number]; isSixHigher: boolean; isOneToSix: boolean };
+  IRatio: { data: number; isSixHigher: boolean; isOneToSix: boolean };
   RGrowth: {
-    data: [number];
+    data: [string];
     isIncreasing: boolean;
   };
-  IncomeLoss: { data: string; isNegative: boolean };
-  PnetIncome: { data: string; isPositive: boolean };
+  IncomeLoss: { data: string[]; isNegative: boolean };
+  PnetIncome: { data: string[]; isPositive: boolean };
   TotalCash: { data: string };
   TotalAssets: {
     data: { assets: string; liabilities: string };
     isPositiveAL: boolean;
   };
   SHEquity: {
-    data: [number];
+    data: [string];
     isIncreasing: boolean;
   };
   LTD: {
@@ -105,11 +105,17 @@ export const AnalyzeData: React.FC<AnalyzeDataProps> = ({ analyzedData }) => {
         <ResultContainer>
           EPS is &nbsp;
           {analyzedData.EPS.isPositiveNumber ? (
-            <Badge colorScheme="green">positive</Badge>
+            <>
+              <Badge colorScheme="green">positive</Badge>
+              &nbsp; and
+            </>
           ) : (
-            <Badge colorScheme="red">negative</Badge>
+            <>
+              <Badge colorScheme="red">negative</Badge>
+              &nbsp; but
+            </>
           )}
-          &nbsp; and is &nbsp;
+          &nbsp; is &nbsp;
           {analyzedData.EPS.isIncreasing ? (
             <Badge colorScheme="green">increasing</Badge>
           ) : (
@@ -144,7 +150,7 @@ export const AnalyzeData: React.FC<AnalyzeDataProps> = ({ analyzedData }) => {
       <CheckBox description="Interest coverage ratio of 6 or higher" />
       <ResultContainer>
         Interest coverage ratio of &nbsp;
-        <p>{analyzedData && `${analyzedData.IRatio.data}`}</p>
+        <p>{analyzedData && `${analyzedData.IRatio.data.toFixed(2)}`}</p>
         is &nbsp;
         {analyzedData &&
           (analyzedData.IRatio.isSixHigher ? (
@@ -152,7 +158,7 @@ export const AnalyzeData: React.FC<AnalyzeDataProps> = ({ analyzedData }) => {
           ) : analyzedData.IRatio.isOneToSix ? (
             <Badge colorScheme="yellow">Good</Badge>
           ) : (
-            <Badge colorScheme="green">Bad</Badge>
+            <Badge colorScheme="red">Bad</Badge>
           ))}
       </ResultContainer>
       <CheckBox description="Steady climb or revenue growth over the last 3 years" />
@@ -167,8 +173,10 @@ export const AnalyzeData: React.FC<AnalyzeDataProps> = ({ analyzedData }) => {
                 return (currentYear - i).toString();
               });
               return createLineChartData(
-                labels.reverse(),
-                analyzedData?.RGrowth.data,
+                labels,
+                analyzedData?.RGrowth.data.map((value) => parseInt(value)) as [
+                  number
+                ],
                 analyzedData?.EPS.isIncreasing ? "green" : "red"
               );
             }}
@@ -178,7 +186,8 @@ export const AnalyzeData: React.FC<AnalyzeDataProps> = ({ analyzedData }) => {
       </Box>
       {analyzedData && (
         <ResultContainer>
-          Revenue growth is &nbsp;
+          Revenue growth of ${analyzedData.RGrowth.data[0]}{" "}
+          {analyzedData.RGrowth.isIncreasing ? "and " : "but "}is &nbsp;
           {analyzedData.RGrowth.isIncreasing ? (
             <Badge colorScheme="green">increasing</Badge>
           ) : (
@@ -189,7 +198,7 @@ export const AnalyzeData: React.FC<AnalyzeDataProps> = ({ analyzedData }) => {
       <CheckBox description="Positive operating income/loss" />
       <ResultContainer>
         Operating income of $
-        <p>{analyzedData && `${analyzedData.IncomeLoss.data}`}</p>
+        <p>{analyzedData && `${analyzedData.IncomeLoss.data[0]}`}</p>
         is &nbsp;
         {analyzedData &&
           (analyzedData.IncomeLoss.isNegative ? (
@@ -201,7 +210,7 @@ export const AnalyzeData: React.FC<AnalyzeDataProps> = ({ analyzedData }) => {
       <CheckBox description="Positive net income" />
       <ResultContainer>
         Net income of $
-        <p>{analyzedData && `${analyzedData.PnetIncome.data}`}</p>
+        <p>{analyzedData && `${analyzedData.PnetIncome.data[0]}`}</p>
         is &nbsp;{" "}
         {analyzedData &&
           (analyzedData.PnetIncome.isPositive ? (
@@ -217,9 +226,9 @@ export const AnalyzeData: React.FC<AnalyzeDataProps> = ({ analyzedData }) => {
       <CheckBox description="Higher assets than liabilities" />
       <ResultContainer>
         Assets of &nbsp;
-        <p>{analyzedData && `${analyzedData.TotalAssets.data.assets}`}</p>
+        <p>{analyzedData && `$${analyzedData.TotalAssets.data.assets}`}</p>
         and Liabilities of &nbsp;
-        <p>{analyzedData && `${analyzedData.TotalAssets.data.liabilities}`}</p>
+        <p>{analyzedData && `$${analyzedData.TotalAssets.data.liabilities}`}</p>
         is &nbsp;
         {analyzedData &&
           (analyzedData.TotalAssets.isPositiveAL ? (
@@ -251,8 +260,10 @@ export const AnalyzeData: React.FC<AnalyzeDataProps> = ({ analyzedData }) => {
                 return (currentYear - i).toString();
               });
               return createLineChartData(
-                labels.reverse(),
-                analyzedData?.SHEquity.data,
+                labels,
+                analyzedData?.SHEquity.data.map((value) => parseInt(value)) as [
+                  number
+                ],
                 analyzedData?.SHEquity.isIncreasing ? "green" : "red"
               );
             }}
@@ -262,15 +273,13 @@ export const AnalyzeData: React.FC<AnalyzeDataProps> = ({ analyzedData }) => {
       </Box>
       {analyzedData && (
         <ResultContainer>
-          Revenue growth is &nbsp;
-          {
-            // TODO: Remove after test && There should always be data
-            analyzedData.SHEquity.isIncreasing ? (
-              <Badge colorScheme="green">increasing</Badge>
-            ) : (
-              <Badge colorScheme="red">not increasing</Badge>
-            )
-          }
+          Share holders' equity growth of ${analyzedData.SHEquity.data[0]} and
+          is &nbsp;
+          {analyzedData.SHEquity.isIncreasing ? (
+            <Badge colorScheme="green">increasing</Badge>
+          ) : (
+            <Badge colorScheme="red">not increasing</Badge>
+          )}
         </ResultContainer>
       )}
     </Index__optionsTable>

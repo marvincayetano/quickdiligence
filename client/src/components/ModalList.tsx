@@ -10,6 +10,7 @@ interface ModalListProps {
   symbol: string;
   name: string;
   setFoundStock: any;
+  setStocks: any;
   onClose: any;
 }
 
@@ -18,10 +19,12 @@ export const ModalList: React.FC<ModalListProps> = ({
   name,
   setFoundStock,
   onClose,
+  setStocks,
 }) => {
   const onClick = (e: any) => {
     e.preventDefault();
     setFoundStock({ symbol, name });
+    setStocks([]);
     onClose();
   };
 

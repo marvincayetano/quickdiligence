@@ -43,7 +43,7 @@ export const NavBar: React.FC<NavBarProps> = ({ setFoundStock }) => {
 
   const [stock, setStock] = useState("");
   const [stocks, setStocks] = useState<any[]>([]);
-  useEffect(() => {}, [stocks]);
+  //   useEffect(() => {}, [stocks]);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -92,6 +92,7 @@ export const NavBar: React.FC<NavBarProps> = ({ setFoundStock }) => {
                     aria-autocomplete="list"
                     autoComplete="false"
                     placeholder="Search for the stock"
+                    onFocus={(e) => e.target.select()}
                     onChange={(e) => {
                       setStock(e.target.value);
                     }}
@@ -125,6 +126,7 @@ export const NavBar: React.FC<NavBarProps> = ({ setFoundStock }) => {
                               symbol={s.symbol}
                               name={s.name}
                               setFoundStock={setFoundStock}
+                              setStocks={setStocks}
                               onClose={onClose}
                             />
                           ))}
