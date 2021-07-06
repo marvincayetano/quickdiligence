@@ -32,7 +32,7 @@ export const Main: React.FC<MainProps> = ({ setInputClick }) => {
             spellCheck="false"
             aria-autocomplete="list"
             autoComplete="false"
-            placeholder="Search for the stock"
+            placeholder="Let's start a quick analyze"
             onClick={() => {
               setInputClick(true);
             }}

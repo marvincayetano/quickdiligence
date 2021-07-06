@@ -34,7 +34,7 @@ interface NavBarProps {
 
 export const NavBar: React.FC<NavBarProps> = ({ setFoundStock }) => {
   // This is for how long before search starts
-  const DONE_TYPING_INTERVAL = 3000;
+  const DONE_TYPING_INTERVAL = 1900;
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
@@ -54,7 +54,8 @@ export const NavBar: React.FC<NavBarProps> = ({ setFoundStock }) => {
       // Search for ticker here
       // Wait for 3 seconds before requesting to server
       axios
-        .get(`https://ticker-2e1ica8b9.now.sh/keyword/${stock}`)
+        // .get(`http://d.yimg.com/autoc.finance.yahoo.com/autoc?query={}&region=1&lang=en"`)
+        .get(`http://${process.env.NEXT_PUBLIC_SERVER}/ticker/${stock}`)
         .then((res) => {
           setStocks(res.data);
           console.log("RESULTS", res.data);

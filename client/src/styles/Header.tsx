@@ -65,6 +65,13 @@ const Nav__listItem = styled.li`
   display: inline-block;
   flex: 0 0 auto;
   font-weight: 600;
+
+  &:hover {
+    -webkit-transform: perspective(1px) translateZ(0);
+    transform: perspective(1px) translateZ(0);
+    box-shadow: 0 0 1px rgb(0 0 0 / 0%);
+    background: var(--chakra-colors-green-200);
+  }
 `;
 
 const Nav__listSuppBtn = styled.li`
@@ -111,7 +118,6 @@ const Nav__searchResultContainer = styled(Nav__search)`
   outline: transparent solid 2px;
   outline-offset: 2px;
   background: #fff;
-  padding-inline-end: var(--chakra-space-4);
   outline: 2px solid transparent;
   outline-offset: 2px;
   box-shadow: var(--chakra-shadows-base);

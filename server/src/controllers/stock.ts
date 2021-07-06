@@ -70,7 +70,7 @@ export const getAnalyze = async (req: Request, res: Response) => {
   // PERatio is for checking if the stock is over or under valued
   const quote = await page.$$eval("div > table > tbody > tr > td", (lists) => {
     return {
-      PERatio: parseFloat((lists[21] as HTMLElement).innerText),
+      PERatio: (lists[21] as HTMLElement).innerText,
       EPS: parseFloat((lists[23] as HTMLElement).innerText),
     };
   });
@@ -173,9 +173,9 @@ export const getAnalyze = async (req: Request, res: Response) => {
     },
     // PERatio is for checking if the stock is over or under valued
     PERatio: {
-      data: quote.PERatio,
-      isUndervalued: quote.PERatio < 14,
-      isOverValued: quote.PERatio > 17,
+      data: quote.PERatio ?? "N/A",
+      isUndervalued: parseFloat(quote.PERatio) < 14,
+      isOverValued: parseFloat(quote.PERatio) > 17,
     },
     // Interest coverage ratio = EBIT / Interest expense
     IRatio: {

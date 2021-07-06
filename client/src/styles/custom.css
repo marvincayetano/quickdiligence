@@ -10,3 +10,8 @@
 .modal__right {
   width: 327px;
 }
+
+.chakra-icon {
+  -webkit-margin-start: var(--chakra-space-1) !important;
+  margin-inline-start: var(--chakra-space-1) !important;
+}

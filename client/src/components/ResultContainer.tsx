@@ -10,10 +10,10 @@ const Result__Container = styled.div`
   justify-content: center;
   align-items: center;
   height: 3rem;
-  margin-bottom: 4rem;
+  margin-bottom: 2rem;
   border-bottom: 1px solid var(--chakra-colors-gray-200);
   margin-top: 2rem;
-  width: 100%;
+  width: 80%;
   align-self: center;
 
   p {

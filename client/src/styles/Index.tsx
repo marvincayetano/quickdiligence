@@ -32,14 +32,22 @@ const Index__optionsContainer = styled.div`
 const Index__optionsTable = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: left;
   width: 60vw;
+`;
+
+const Index__optionsDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: left;
+  width: 100%;
   background: #fff;
   outline: 2px solid transparent;
   outline-offset: 2px;
   box-shadow: var(--chakra-shadows-base);
   border-radius: var(--chakra-radii-md);
+  margin-bottom: 3rem;
 `;
 
 const Index__score = styled.div`
@@ -62,4 +70,5 @@ export {
   Index__symbol,
   Index__name,
   Index__score,
+  Index__optionsDiv,
 };

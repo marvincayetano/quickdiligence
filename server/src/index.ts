@@ -9,6 +9,7 @@ import cors from "cors";
 
 import { __prod__ } from "./constants";
 import { getAnalyze } from "./controllers/stock";
+import { getTicker } from "./controllers/ticker";
 
 const main = async () => {
   const app = express();
@@ -43,6 +44,7 @@ const main = async () => {
   //   );
 
   app.get("/analyze/:symbol", getAnalyze);
+  app.get("/ticker/:search", getTicker);
 
   app.listen(parseInt(process.env.PORT), () => {
     console.log("server started on localhost:3000");

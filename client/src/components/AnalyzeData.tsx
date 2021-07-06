@@ -2,18 +2,22 @@ import React from "react";
 
 import { Line } from "react-chartjs-2";
 import { Box, Badge } from "@chakra-ui/react";
-import { Index__optionsTable } from "../styles/Index";
+import { Index__optionsTable, Index__optionsDiv } from "../styles/Index";
 import { CheckBox } from "./CheckBox";
 import { ResultContainer } from "./ResultContainer";
 
 export interface AnalyzeDataInterface {
   Price: number;
   EPS: {
-    data: [number];
+    data: number[];
     isPositiveNumber: boolean;
     isIncreasing: boolean;
   };
-  PERatio: { data: [number]; isUndervalued: boolean; isOverValued: boolean };
+  PERatio: {
+    data: string;
+    isUndervalued: boolean;
+    isOverValued: boolean;
+  };
   IRatio: { data: number; isSixHigher: boolean; isOneToSix: boolean };
   RGrowth: {
     data: [string];
@@ -80,49 +84,48 @@ interface AnalyzeDataProps {
 export const AnalyzeData: React.FC<AnalyzeDataProps> = ({ analyzedData }) => {
   return (
     <Index__optionsTable>
-      <CheckBox description="Positive number EPS(earnings-per-share) and continued increase" />
-      <Box p="0 2rem">
+      <Index__optionsDiv>
+        <CheckBox
+          description="Earnings per share (EPS)"
+          tip="EPS should be a positive number and increasing"
+        />
+        <Box p="0 2rem">
+          {analyzedData && (
+            <Line
+              type="Line"
+              height={95}
+              data={() => {
+                const currentYear = new Date().getFullYear();
+                const labels = analyzedData?.EPS.data.map((_, i) => {
+                  return (currentYear - i).toString();
+                });
+                return createLineChartData(
+                  labels.reverse(),
+                  analyzedData?.EPS.data.reverse() as [number],
+                  analyzedData?.EPS.isIncreasing ? "green" : "red"
+                );
+              }}
+              options={eps_linechart_options}
+            />
+          )}
+        </Box>
         {analyzedData && (
-          <Line
-            type="Line"
-            height={95}
-            data={() => {
-              const currentYear = new Date().getFullYear();
-              const labels = analyzedData?.EPS.data.map((_, i) => {
-                return (currentYear - i).toString();
-              });
-              return createLineChartData(
-                labels,
-                analyzedData?.EPS.data,
-                analyzedData?.EPS.isIncreasing ? "green" : "red"
-              );
-            }}
-            options={eps_linechart_options}
-          />
-        )}
-      </Box>
-      {analyzedData && (
-        <ResultContainer>
-          EPS is &nbsp;
-          {analyzedData.EPS.isPositiveNumber ? (
-            <>
+          <ResultContainer>
+            EPS is &nbsp;
+            {analyzedData.EPS.isPositiveNumber ? (
               <Badge colorScheme="green">positive</Badge>
-              &nbsp; and
-            </>
-          ) : (
-            <>
+            ) : (
               <Badge colorScheme="red">negative</Badge>
-              &nbsp; but
-            </>
-          )}
-          &nbsp; is &nbsp;
-          {analyzedData.EPS.isIncreasing ? (
-            <Badge colorScheme="green">increasing</Badge>
-          ) : (
-            <Badge colorScheme="red">not increasing</Badge>
-          )}
-        </ResultContainer>
-      )}
+            )}
+            &nbsp; and is &nbsp;
+            {analyzedData.EPS.isIncreasing ? (
+              <Badge colorScheme="green">increasing</Badge>
+            ) : (
+              <Badge colorScheme="red">not increasing</Badge>
+            )}
+          </ResultContainer>
+        )}
+      </Index__optionsDiv>
       {/* <CheckBox
             name="ROI"
             description="Return on investment continued growth"
@@ -135,153 +138,207 @@ export const AnalyzeData: React.FC<AnalyzeDataProps> = ({ analyzedData }) => {
             currentOptions={currentOptions}
             setCurrentOptions={setCurrentOptions}
           /> */}
-      <CheckBox description="Is the stock trading at a reasonable price? PE Ratio = Stock price/EPS. Must be 15 or less" />
-      <ResultContainer>
-        PE Ratio of &nbsp;
-        <p>{analyzedData && ` ${analyzedData.PERatio.data}`}</p>
-        is &nbsp;
-        {analyzedData &&
-          (analyzedData.PERatio.isOverValued ? (
-            <Badge colorScheme="red">Overvalued</Badge>
-          ) : (
-            <Badge colorScheme="green">Good</Badge>
-          ))}
-      </ResultContainer>
-      <CheckBox description="Interest coverage ratio of 6 or higher" />
-      <ResultContainer>
-        Interest coverage ratio of &nbsp;
-        <p>{analyzedData && `${analyzedData.IRatio.data.toFixed(2)}`}</p>
-        is &nbsp;
-        {analyzedData &&
-          (analyzedData.IRatio.isSixHigher ? (
-            <Badge colorScheme="green">Very Good</Badge>
-          ) : analyzedData.IRatio.isOneToSix ? (
-            <Badge colorScheme="yellow">Good</Badge>
-          ) : (
-            <Badge colorScheme="red">Bad</Badge>
-          ))}
-      </ResultContainer>
-      <CheckBox description="Steady climb or revenue growth over the last 3 years" />
-      <Box p="0 2rem">
-        {analyzedData && (
-          <Line
-            type="Line"
-            height={95}
-            data={() => {
-              const currentYear = new Date().getFullYear();
-              const labels = analyzedData?.RGrowth.data.map((_, i) => {
-                return (currentYear - i).toString();
-              });
-              return createLineChartData(
-                labels,
-                analyzedData?.RGrowth.data.map((value) => parseInt(value)) as [
-                  number
-                ],
-                analyzedData?.EPS.isIncreasing ? "green" : "red"
-              );
-            }}
-            options={eps_linechart_options}
-          />
-        )}
-      </Box>
-      {analyzedData && (
-        <ResultContainer>
-          Revenue growth of ${analyzedData.RGrowth.data[0]}{" "}
-          {analyzedData.RGrowth.isIncreasing ? "and " : "but "}is &nbsp;
-          {analyzedData.RGrowth.isIncreasing ? (
-            <Badge colorScheme="green">increasing</Badge>
-          ) : (
-            <Badge colorScheme="red">not increasing</Badge>
+
+      <Index__optionsDiv>
+        <CheckBox
+          tip="Steady climb of Revenue growth is preferred"
+          description="Revenue growth"
+        />
+        <Box p="0 2rem">
+          {analyzedData && (
+            <Line
+              type="Line"
+              height={95}
+              data={() => {
+                const currentYear = new Date().getFullYear();
+                const labels = analyzedData?.RGrowth.data.map((_, i) => {
+                  return (currentYear - i).toString();
+                });
+                return createLineChartData(
+                  labels.reverse(),
+                  analyzedData?.RGrowth.data
+                    .map((value) => parseInt(value))
+                    .reverse() as [number],
+                  analyzedData?.EPS.isIncreasing ? "green" : "red"
+                );
+              }}
+              options={eps_linechart_options}
+            />
           )}
+        </Box>
+        {analyzedData && (
+          <ResultContainer>
+            Revenue growth of ${analyzedData.RGrowth.data[0]} &nbsp;
+            {analyzedData.RGrowth.isIncreasing ? "and " : "but "} &nbsp; is
+            &nbsp;
+            {analyzedData.RGrowth.isIncreasing ? (
+              <Badge colorScheme="green">increasing</Badge>
+            ) : (
+              <Badge colorScheme="red">not increasing</Badge>
+            )}
+          </ResultContainer>
+        )}
+      </Index__optionsDiv>
+      <Index__optionsDiv>
+        <CheckBox
+          tip="Stock holders' equity should be growing in the past 3 years"
+          description="Stockholders' Equity"
+        />
+        <Box p="0 2rem">
+          {analyzedData && (
+            <Line
+              type="Line"
+              height={95}
+              data={() => {
+                const currentYear = new Date().getFullYear();
+                const labels = analyzedData?.SHEquity.data.map((_, i) => {
+                  return (currentYear - i).toString();
+                });
+                return createLineChartData(
+                  labels.reverse(),
+                  analyzedData?.SHEquity.data
+                    .map((value) => parseInt(value))
+                    .reverse() as [number],
+                  analyzedData?.SHEquity.isIncreasing ? "green" : "red"
+                );
+              }}
+              options={eps_linechart_options}
+            />
+          )}
+        </Box>
+        {analyzedData && (
+          <ResultContainer>
+            Share holders' equity growth of ${analyzedData.SHEquity.data[0]} and
+            is &nbsp;
+            {analyzedData.SHEquity.isIncreasing ? (
+              <Badge colorScheme="green">increasing</Badge>
+            ) : (
+              <Badge colorScheme="red">not increasing</Badge>
+            )}
+          </ResultContainer>
+        )}
+      </Index__optionsDiv>
+      <Index__optionsDiv>
+        <CheckBox
+          tip="Stock price should be in a reasonable price unless the stock is a blue chip. PE Ratio of 15 or less is what we are looking for here"
+          description="PE Ratio"
+        />
+        {analyzedData?.PERatio.data && analyzedData?.PERatio.data !== "N/A" ? (
+          <ResultContainer>
+            PE Ratio of &nbsp;
+            <p>{analyzedData && ` ${analyzedData.PERatio.data}`}</p>
+            means &nbsp;
+            {analyzedData &&
+              (analyzedData.PERatio.isOverValued ? (
+                <Badge colorScheme="red">Overvalued</Badge>
+              ) : (
+                <Badge colorScheme="green">Good</Badge>
+              ))}
+          </ResultContainer>
+        ) : (
+          <ResultContainer>
+            PE Ratio is &nbsp;
+            <Badge colorScheme="orange">Unavailable</Badge>
+          </ResultContainer>
+        )}
+      </Index__optionsDiv>
+      <Index__optionsDiv>
+        <CheckBox
+          tip="Interest Coverage Ratio of 6 or higher is preferred"
+          description="Interest Coverage Ratio"
+        />
+        <ResultContainer>
+          Interest coverage ratio of &nbsp;
+          <p>{analyzedData && `${analyzedData.IRatio.data.toFixed(2)}`}</p>
+          is &nbsp;
+          {analyzedData &&
+            (analyzedData.IRatio.isSixHigher ? (
+              <Badge colorScheme="green">Very Good</Badge>
+            ) : analyzedData.IRatio.isOneToSix ? (
+              <Badge colorScheme="yellow">Good</Badge>
+            ) : (
+              <Badge colorScheme="red">Bad</Badge>
+            ))}
         </ResultContainer>
-      )}
-      <CheckBox description="Positive operating income/loss" />
-      <ResultContainer>
-        Operating income of $
-        <p>{analyzedData && `${analyzedData.IncomeLoss.data[0]}`}</p>
-        is &nbsp;
-        {analyzedData &&
-          (analyzedData.IncomeLoss.isNegative ? (
-            <Badge colorScheme="red">Bad</Badge>
-          ) : (
-            <Badge colorScheme="green">Good</Badge>
-          ))}
-      </ResultContainer>
-      <CheckBox description="Positive net income" />
-      <ResultContainer>
-        Net income of $
-        <p>{analyzedData && `${analyzedData.PnetIncome.data[0]}`}</p>
-        is &nbsp;{" "}
-        {analyzedData &&
-          (analyzedData.PnetIncome.isPositive ? (
-            <Badge colorScheme="green">Good</Badge>
-          ) : (
-            <Badge colorScheme="red">Bad</Badge>
-          ))}
-      </ResultContainer>
-      <CheckBox description="A lot of total cash" />
-      <ResultContainer>
-        Total cash of $<p>{analyzedData && `${analyzedData.TotalCash.data}`}</p>
-      </ResultContainer>
-      <CheckBox description="Higher assets than liabilities" />
-      <ResultContainer>
-        Assets of &nbsp;
-        <p>{analyzedData && `$${analyzedData.TotalAssets.data.assets}`}</p>
-        and Liabilities of &nbsp;
-        <p>{analyzedData && `$${analyzedData.TotalAssets.data.liabilities}`}</p>
-        is &nbsp;
-        {analyzedData &&
-          (analyzedData.TotalAssets.isPositiveAL ? (
-            <Badge colorScheme="green">Good</Badge>
-          ) : (
-            <Badge colorScheme="red">Bad</Badge>
-          ))}
-      </ResultContainer>
+      </Index__optionsDiv>
+      <Index__optionsDiv>
+        <CheckBox
+          tip="Positive number is a must"
+          description="Operating Income/Loss"
+        />
+        <ResultContainer>
+          Operating income of $
+          <p>{analyzedData && `${analyzedData.IncomeLoss.data[0]}`}</p>
+          is &nbsp;
+          {analyzedData &&
+            (analyzedData.IncomeLoss.isNegative ? (
+              <Badge colorScheme="red">Bad</Badge>
+            ) : (
+              <Badge colorScheme="green">Good</Badge>
+            ))}
+        </ResultContainer>
+      </Index__optionsDiv>
+      <Index__optionsDiv>
+        <CheckBox
+          tip="Positive Net Income is a must"
+          description="Net Income"
+        />
+        <ResultContainer>
+          Net income of $
+          <p>{analyzedData && `${analyzedData.PnetIncome.data[0]}`}</p>
+          is &nbsp;{" "}
+          {analyzedData &&
+            (analyzedData.PnetIncome.isPositive ? (
+              <Badge colorScheme="green">Good</Badge>
+            ) : (
+              <Badge colorScheme="red">Bad</Badge>
+            ))}
+        </ResultContainer>
+      </Index__optionsDiv>
+      <Index__optionsDiv>
+        <CheckBox
+          tip="Assets should always be higher than liabilities"
+          description="Assets vs Liabilities"
+        />
+        <ResultContainer>
+          Assets of &nbsp;
+          <p>{analyzedData && `$${analyzedData.TotalAssets.data.assets}`}</p>
+          and Liabilities of &nbsp;
+          <p>
+            {analyzedData && `$${analyzedData.TotalAssets.data.liabilities}`}
+          </p>
+          is &nbsp;
+          {analyzedData &&
+            (analyzedData.TotalAssets.isPositiveAL ? (
+              <Badge colorScheme="green">Good</Badge>
+            ) : (
+              <Badge colorScheme="red">Bad</Badge>
+            ))}
+        </ResultContainer>
+      </Index__optionsDiv>
       {/* <CheckBox
             name="GWIA"
             description="Goodwill and intangible assets should be 0 or less"
             currentOptions={currentOptions}
             setCurrentOptions={setCurrentOptions}
           /> */}
-      <CheckBox description="Long term debt. Less is better" />
-      <ResultContainer>
-        Long-term debt of &nbsp;
-        <p>{analyzedData && `$${analyzedData.LTD.data}`}</p>
-      </ResultContainer>
-      <CheckBox description="Stock holder equity. Want this to see growth over the past 3 years" />
-      <Box p="0 2rem">
-        {analyzedData && (
-          <Line
-            type="Line"
-            height={95}
-            data={() => {
-              const currentYear = new Date().getFullYear();
-              const labels = analyzedData?.SHEquity.data.map((_, i) => {
-                return (currentYear - i).toString();
-              });
-              return createLineChartData(
-                labels,
-                analyzedData?.SHEquity.data.map((value) => parseInt(value)) as [
-                  number
-                ],
-                analyzedData?.SHEquity.isIncreasing ? "green" : "red"
-              );
-            }}
-            options={eps_linechart_options}
-          />
-        )}
-      </Box>
-      {analyzedData && (
+      <Index__optionsDiv>
+        <CheckBox tip="Total cash that company has" description="Total cash" />
         <ResultContainer>
-          Share holders' equity growth of ${analyzedData.SHEquity.data[0]} and
-          is &nbsp;
-          {analyzedData.SHEquity.isIncreasing ? (
-            <Badge colorScheme="green">increasing</Badge>
-          ) : (
-            <Badge colorScheme="red">not increasing</Badge>
-          )}
+          Total cash of $
+          <p>{analyzedData && `${analyzedData.TotalCash.data}`}</p>
         </ResultContainer>
-      )}
+      </Index__optionsDiv>
+      <Index__optionsDiv>
+        <CheckBox
+          tip="Every company has debt, even apple has debt, but small debt is preferred"
+          description="Long Term Debt"
+        />
+        <ResultContainer>
+          Long-term debt of &nbsp;
+          <p>{analyzedData && `$${analyzedData.LTD.data}`}</p>
+        </ResultContainer>
+      </Index__optionsDiv>
     </Index__optionsTable>
   );
 };
