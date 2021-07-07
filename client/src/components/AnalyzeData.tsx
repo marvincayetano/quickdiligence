@@ -111,13 +111,13 @@ export const AnalyzeData: React.FC<AnalyzeDataProps> = ({ analyzedData }) => {
         </Box>
         {analyzedData && (
           <ResultContainer>
-            EPS is &nbsp;
+            <p>EPS is &nbsp;</p>
             {analyzedData.EPS.isPositiveNumber ? (
               <Badge colorScheme="green">positive</Badge>
             ) : (
               <Badge colorScheme="red">negative</Badge>
             )}
-            &nbsp; and is &nbsp;
+            <p>&nbsp; and is &nbsp;</p>
             {analyzedData.EPS.isIncreasing ? (
               <Badge colorScheme="green">increasing</Badge>
             ) : (
@@ -168,9 +168,11 @@ export const AnalyzeData: React.FC<AnalyzeDataProps> = ({ analyzedData }) => {
         </Box>
         {analyzedData && (
           <ResultContainer>
-            Revenue growth of ${analyzedData.RGrowth.data[0]} &nbsp;
-            {analyzedData.RGrowth.isIncreasing ? "and " : "but "} &nbsp; is
-            &nbsp;
+            <p>
+              Revenue growth of ${analyzedData.RGrowth.data[0]} &nbsp;
+              {analyzedData.RGrowth.isIncreasing ? "and " : "but "}
+              &nbsp; is &nbsp;
+            </p>
             {analyzedData.RGrowth.isIncreasing ? (
               <Badge colorScheme="green">increasing</Badge>
             ) : (
@@ -208,8 +210,10 @@ export const AnalyzeData: React.FC<AnalyzeDataProps> = ({ analyzedData }) => {
         </Box>
         {analyzedData && (
           <ResultContainer>
-            Share holders' equity growth of ${analyzedData.SHEquity.data[0]} and
-            is &nbsp;
+            <p>
+              Share holders' equity growth of ${analyzedData.SHEquity.data[0]}{" "}
+              and is &nbsp;
+            </p>
             {analyzedData.SHEquity.isIncreasing ? (
               <Badge colorScheme="green">increasing</Badge>
             ) : (
@@ -225,9 +229,11 @@ export const AnalyzeData: React.FC<AnalyzeDataProps> = ({ analyzedData }) => {
         />
         {analyzedData?.PERatio.data && analyzedData?.PERatio.data !== "N/A" ? (
           <ResultContainer>
-            PE Ratio of &nbsp;
-            <p>{analyzedData && ` ${analyzedData.PERatio.data}`}</p>
-            means &nbsp;
+            <p>
+              PE Ratio of &nbsp;
+              {analyzedData && ` ${analyzedData.PERatio.data}`}
+              &nbsp; means &nbsp;
+            </p>
             {analyzedData &&
               (analyzedData.PERatio.isOverValued ? (
                 <Badge colorScheme="red">Overvalued</Badge>
@@ -237,7 +243,7 @@ export const AnalyzeData: React.FC<AnalyzeDataProps> = ({ analyzedData }) => {
           </ResultContainer>
         ) : (
           <ResultContainer>
-            PE Ratio is &nbsp;
+            <p>PE Ratio is &nbsp;</p>
             <Badge colorScheme="orange">Unavailable</Badge>
           </ResultContainer>
         )}
@@ -248,9 +254,11 @@ export const AnalyzeData: React.FC<AnalyzeDataProps> = ({ analyzedData }) => {
           description="Interest Coverage Ratio"
         />
         <ResultContainer>
-          Interest coverage ratio of &nbsp;
-          <p>{analyzedData && `${analyzedData.IRatio.data.toFixed(2)}`}</p>
-          is &nbsp;
+          <p>
+            Interest coverage ratio of &nbsp;
+            {analyzedData && `${analyzedData.IRatio.data.toFixed(2)}`}
+            &nbsp; is &nbsp;
+          </p>
           {analyzedData &&
             (analyzedData.IRatio.isSixHigher ? (
               <Badge colorScheme="green">Very Good</Badge>
@@ -267,9 +275,11 @@ export const AnalyzeData: React.FC<AnalyzeDataProps> = ({ analyzedData }) => {
           description="Operating Income/Loss"
         />
         <ResultContainer>
-          Operating income of $
-          <p>{analyzedData && `${analyzedData.IncomeLoss.data[0]}`}</p>
-          is &nbsp;
+          <p>
+            Operating income of $
+            {analyzedData && `${analyzedData.IncomeLoss.data[0]}`}
+            &nbsp; is &nbsp;
+          </p>
           {analyzedData &&
             (analyzedData.IncomeLoss.isNegative ? (
               <Badge colorScheme="red">Bad</Badge>
@@ -284,9 +294,11 @@ export const AnalyzeData: React.FC<AnalyzeDataProps> = ({ analyzedData }) => {
           description="Net Income"
         />
         <ResultContainer>
-          Net income of $
-          <p>{analyzedData && `${analyzedData.PnetIncome.data[0]}`}</p>
-          is &nbsp;{" "}
+          <p>
+            Net income of $
+            {analyzedData && `${analyzedData.PnetIncome.data[0]}`}
+            &nbsp; is &nbsp;
+          </p>
           {analyzedData &&
             (analyzedData.PnetIncome.isPositive ? (
               <Badge colorScheme="green">Good</Badge>
@@ -301,13 +313,13 @@ export const AnalyzeData: React.FC<AnalyzeDataProps> = ({ analyzedData }) => {
           description="Assets vs Liabilities"
         />
         <ResultContainer>
-          Assets of &nbsp;
-          <p>{analyzedData && `$${analyzedData.TotalAssets.data.assets}`}</p>
-          and Liabilities of &nbsp;
           <p>
+            Assets of &nbsp;
+            {analyzedData && `$${analyzedData.TotalAssets.data.assets}`}
+            and Liabilities of &nbsp;
             {analyzedData && `$${analyzedData.TotalAssets.data.liabilities}`}
+            &nbsp; is &nbsp;
           </p>
-          is &nbsp;
           {analyzedData &&
             (analyzedData.TotalAssets.isPositiveAL ? (
               <Badge colorScheme="green">Good</Badge>
@@ -325,8 +337,9 @@ export const AnalyzeData: React.FC<AnalyzeDataProps> = ({ analyzedData }) => {
       <Index__optionsDiv>
         <CheckBox tip="Total cash that company has" description="Total cash" />
         <ResultContainer>
-          Total cash of $
-          <p>{analyzedData && `${analyzedData.TotalCash.data}`}</p>
+          <p>
+            Total cash of ${analyzedData && `${analyzedData.TotalCash.data}`}
+          </p>
         </ResultContainer>
       </Index__optionsDiv>
       <Index__optionsDiv>
@@ -335,8 +348,10 @@ export const AnalyzeData: React.FC<AnalyzeDataProps> = ({ analyzedData }) => {
           description="Long Term Debt"
         />
         <ResultContainer>
-          Long-term debt of &nbsp;
-          <p>{analyzedData && `$${analyzedData.LTD.data}`}</p>
+          <p>
+            Long-term debt of &nbsp;
+            {analyzedData && `$${analyzedData.LTD.data}`}
+          </p>
         </ResultContainer>
       </Index__optionsDiv>
     </Index__optionsTable>

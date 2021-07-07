@@ -43,11 +43,16 @@ const Index__optionsContainer = styled.div`
   background: #f9f7f8;
   justify-content: center;
   padding: 1.5rem;
+
+  @media ${device.tablet} {
+    padding: 2rem 1rem;
+  }
 `;
 
 const Index__optionsTable = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
   width: 60vw;
 
   @media ${device.laptop} {
@@ -96,6 +101,19 @@ const Index__score = styled.div`
   }
 `;
 
+const Index__desc = styled.span`
+  text-align: center;
+  font-size: 2.3rem;
+  color: #55575a;
+  margin-left: 1rem;
+  margin-right: 5px;
+  font-weight: 500;
+
+  @media ${device.tablet} {
+    font-size: 1.9rem;
+  }
+`;
+
 export {
   Index__symbolContainer,
   Index__optionsContainer,
@@ -103,5 +121,6 @@ export {
   Index__symbol,
   Index__name,
   Index__score,
+  Index__desc,
   Index__optionsDiv,
 };

@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { device } from "../styles/device";
 
 export const ResultContainer: React.FC = ({ children }) => {
   return <Result__Container>{children}</Result__Container>;
@@ -10,21 +11,31 @@ const Result__Container = styled.div`
   justify-content: center;
   align-items: center;
   height: 3rem;
-  margin-bottom: 2rem;
-  border-bottom: 1px solid var(--chakra-colors-gray-200);
-  margin-top: 2rem;
-  width: 80%;
+  margin: 2rem 0;
+  width: 100%;
+  padding: 0 2rem;
   align-self: center;
 
   p {
-    padding-right: 1rem;
-    font-size: "2rem";
-    font-weight: 600;
+    font-size: 2rem;
+    font-weight: 500;
   }
 
   span {
-    font-size: 1.3rem;
+    font-size: 1.6rem;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
+  }
+
+  @media ${device.tablet} {
+    padding: 0 1rem;
+
+    p {
+      font-size: 1.5rem;
+    }
+
+    span {
+      font-size: 1.3rem;
+    }
   }
 `;

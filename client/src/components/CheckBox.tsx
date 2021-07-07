@@ -1,6 +1,7 @@
 import { QuestionIcon } from "@chakra-ui/icons";
 import { Stack, Tooltip } from "@chakra-ui/react";
 import React from "react";
+import { Index__desc } from "../styles/Index";
 
 interface CheckBoxProps {
   description: string;
@@ -16,17 +17,7 @@ export const CheckBox: React.FC<CheckBoxProps> = ({ description, tip }) => {
       display="flex"
       justifyContent="center"
     >
-      <span
-        style={{
-          textAlign: "center",
-          fontSize: "2.3rem",
-          color: "#55575A",
-          marginLeft: "1rem",
-          marginRight: "5px",
-        }}
-      >
-        {description}
-      </span>
+      <Index__desc className="checkbox__desc">{description}</Index__desc>
       <Tooltip label={tip} fontSize="xl">
         <QuestionIcon color="gray.300" width="6" height="6" />
       </Tooltip>

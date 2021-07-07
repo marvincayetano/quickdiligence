@@ -24,6 +24,10 @@ const Nav__container = styled.div`
   @media ${device.laptop} {
     height: 6.5rem;
   }
+
+  @media ${device.tablet} {
+    padding: 0 1rem;
+  }
 `;
 
 const Nav__element = styled.div`
@@ -32,10 +36,6 @@ const Nav__element = styled.div`
   max-width: 1680px;
   margin: 0 auto;
   padding: 0 16px;
-
-  @media ${device.tablet} {
-    padding: 0 8px;
-  }
 `;
 
 const Nav__list = styled.ul`

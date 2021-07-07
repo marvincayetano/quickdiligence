@@ -192,7 +192,7 @@ const AnalyzeMain: React.FC<AnalyzeMainProps> = ({}) => {
               )}
             </h1>
             <Index__optionsContainer>
-              <Index__optionsTable style={{ width: "auto" }}>
+              <Index__optionsTable>
                 {news.status === "ok" &&
                   news.articles.map((n: NewsInterface) => (
                     <News key={n.url} news={n} />

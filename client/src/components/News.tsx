@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 
 import { Box, Image, Divider, Link } from "@chakra-ui/react";
 
@@ -19,16 +20,8 @@ interface NewsProps {
 
 export const News: React.FC<NewsProps> = ({ news }) => {
   return (
-    <Box
-      borderWidth="1px"
-      borderRadius="lg"
-      overflow="hidden"
-      maxH="sm"
-      maxW="80vh"
-      d="flex"
-      p="1.5rem"
-    >
-      <Box p="6" maxW="70%">
+    <News__container>
+      <Box p="6" width="50%">
         <Box d="flex" alignItems="baseline">
           <Box
             color="gray.500"
@@ -43,15 +36,7 @@ export const News: React.FC<NewsProps> = ({ news }) => {
         </Box>
 
         <Link href={news.url} isExternal>
-          <Box
-            mt="1"
-            fontWeight="semibold"
-            as="h4"
-            lineHeight="tight"
-            fontSize="l"
-          >
-            {news.title}
-          </Box>
+          <News__title>{news.title}</News__title>
         </Link>
 
         <Divider pb=".8rem" mb="1.2rem" />
@@ -62,9 +47,26 @@ export const News: React.FC<NewsProps> = ({ news }) => {
       <Image
         src={news.urlToImage}
         height="100%"
-        maxW="30%"
+        maxW="40%"
         alignSelf="center"
       />
-    </Box>
+    </News__container>
   );
 };
+
+const News__title = styled.p`
+  margin-top: 1rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+`;
+
+const News__container = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--chakra-shadows-base);
+  border-radius: var(--chakra-radii-md);
+  margin-bottom: 3rem;
+`;
