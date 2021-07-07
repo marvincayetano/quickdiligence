@@ -12,14 +12,15 @@ const Index__symbolContainer = styled.div`
     width: 85vh;
     padding: 0 2rem;
     justify-content: space-between;
+    align-items: center;
   }
 
   .info__price {
     align-self: center;
-    font-size: 4.4rem;
+    font-size: 3rem;
 
     @media ${device.tablet} {
-      font-size: 3.2rem;
+      font-size: 2.5rem;
     }
   }
 `;
@@ -89,14 +90,14 @@ const Index__score = styled.div`
   justify-content: center;
 
   span {
-    font-size: 2rem;
+    font-size: 4rem;
     font-weight: 500;
     letter-spacing: 0.3rem;
     text-align: center;
+    font-style: italic;
 
     @media ${device.tablet} {
-      font-size: 2rem;
-      letter-spacing: 0.1rem;
+      font-size: 3rem;
     }
   }
 `;
