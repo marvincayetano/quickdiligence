@@ -151,11 +151,7 @@ const AnalyzeMain: React.FC<AnalyzeMainProps> = ({}) => {
               </div>
               {!isLoading && (
                 <>
-                  <Index__name
-                    style={{ alignSelf: "center", fontSize: "4.5rem" }}
-                  >
-                    {`$${price}`}
-                  </Index__name>
+                  <p className="info__price">{`$${price}`}</p>
                   <Index__score>
                     <span>score</span>
                     <span style={{ color: "green" }}>{score}/8</span>

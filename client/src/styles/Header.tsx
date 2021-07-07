@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { device } from "./device";
 
 const Header = styled.div`
   position: relative;
@@ -20,7 +21,7 @@ const Nav__container = styled.div`
   background: #fff;
   transition: box-shadow 0.7s cubic-bezier(0.19, 1, 0.4, 1);
 
-  @media (max-width: 960px) {
+  @media ${device.laptop} {
     height: 6.5rem;
   }
 `;
@@ -31,6 +32,10 @@ const Nav__element = styled.div`
   max-width: 1680px;
   margin: 0 auto;
   padding: 0 16px;
+
+  @media ${device.tablet} {
+    padding: 0 8px;
+  }
 `;
 
 const Nav__list = styled.ul`
@@ -42,8 +47,30 @@ const Nav__list = styled.ul`
   list-style: none;
 `;
 
+const Nav__icon__main = styled(Nav__list)`
+  justify-content: flex-start;
+`;
+
 const Nav__icon = styled(Nav__list)`
   justify-content: flex-start;
+
+  img {
+    @media ${device.laptop} {
+      display: none;
+    }
+  }
+
+  .mobileIcon {
+    @media ${device.laptop} {
+      display: block !important;
+      max-height: 6rem;
+      max-width: 100%;
+      min-width: 80%;
+      height: auto;
+      border: 0;
+      vertical-align: middle;
+    }
+  }
 `;
 
 const Nav__search = styled(Nav__list)`
@@ -58,6 +85,10 @@ const Nav__support = styled(Nav__list)`
   justify-content: flex-end;
   a {
     text-decoration: none;
+  }
+
+  @media ${device.tablet} {
+    display: none;
   }
 `;
 
@@ -98,17 +129,13 @@ const Nav__listSuppBtn = styled.li`
   }
 `;
 
-const Nav__itemLink = styled.a`
-  color: #54575a;
-  text-decoration: none;
-`;
-
-const Nav__logo = styled(Nav__itemLink)`
+const Nav__logo = styled.div`
   display: block;
 
   &:img {
     max-height: 2.6rem;
     max-width: 100%;
+    min-width: 70%;
     height: auto;
     border: 0;
   }
@@ -191,6 +218,7 @@ export {
   Header,
   NavHeader,
   Nav__icon,
+  Nav__icon__main,
   Nav__logo,
   Nav__search,
   Nav__element,

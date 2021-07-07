@@ -76,8 +76,14 @@ export const NavBar: React.FC<NavBarProps> = ({ setFoundStock }) => {
             <Nav__icon>
               <Nav__listItem>
                 <NextLink href="">
-                  <Nav__logo aria-current="page" target="_self" href="">
+                  <Nav__logo aria-current="page">
                     <img src="/logo.svg" alt="quickdiligence logo" />
+                    <img
+                      src="/logoMobile.svg"
+                      className="mobileIcon"
+                      style={{ display: "none" }}
+                      alt="quickdiligence logo"
+                    />
                   </Nav__logo>
                 </NextLink>
               </Nav__listItem>

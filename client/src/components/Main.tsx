@@ -4,7 +4,8 @@ import NextLink from "next/link";
 
 import { SearchIcon } from "@chakra-ui/icons";
 
-import { Nav__icon, Nav__logo, Nav__listItem } from "../styles/Header";
+import { device } from "../styles/device";
+import { Nav__icon__main, Nav__logo, Nav__listItem } from "../styles/Header";
 
 interface MainProps {
   setInputClick: any;
@@ -14,15 +15,15 @@ export const Main: React.FC<MainProps> = ({ setInputClick }) => {
   return (
     <Main__container>
       <Hero__container>
-        <Nav__icon>
+        <Nav__icon__main>
           <Nav__listItem>
             <NextLink href="">
-              <Nav__logo aria-current="page" target="_self" href="">
+              <Nav__logo aria-current="page">
                 <img src="/logo.svg" alt="quickdiligence logo" />
               </Nav__logo>
             </NextLink>
           </Nav__listItem>
-        </Nav__icon>
+        </Nav__icon__main>
         <span color="gray.500">
           A quick stock analyzer for your next 💎 hanzzz
         </span>
@@ -54,6 +55,15 @@ const Main__container = styled.div`
   width: 100vw;
   letter-spacing: 0.5px;
   font-weight: 400;
+  text-align: center;
+
+  @media ${device.tablet} {
+    padding: 0 2.5rem;
+
+    input {
+      font-size: 2rem;
+    }
+  }
 `;
 
 const Hero__container = styled.div`
