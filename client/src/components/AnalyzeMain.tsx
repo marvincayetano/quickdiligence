@@ -47,7 +47,17 @@ const AnalyzeMain: React.FC<AnalyzeMainProps> = ({}) => {
           `https://newsapi.org/v2/top-headlines?q=${
             // TODO: Change this to first name of the company
             foundStock.name.split(" ")[0]
-          }&category=business&apiKey=${process.env.NEXT_PUBLIC_NEWSAPI_KEY}`
+          }&category=business&apiKey=${process.env.NEXT_PUBLIC_NEWSAPI_KEY}`,
+          {
+            url: `https://newsapi.org/v2/top-headlines?q=${
+              foundStock.name.split(" ")[0]
+            }&category=business&apiKey=${process.env.NEXT_PUBLIC_NEWSAPI_KEY}`,
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods":
+                "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+            },
+          }
         )
         .then((result) => {
           setNews(result.data);
@@ -60,7 +70,15 @@ const AnalyzeMain: React.FC<AnalyzeMainProps> = ({}) => {
       // This get is getting the results after analyzing the stock
       axios
         .get(
-          `https://${process.env.NEXT_PUBLIC_SERVER}/analyze/${foundStock.symbol}`
+          `https://${process.env.NEXT_PUBLIC_SERVER}/analyze/${foundStock.symbol}`,
+          {
+            url: `https://${process.env.NEXT_PUBLIC_SERVER}/analyze/${foundStock.symbol}`,
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods":
+                "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+            },
+          }
         )
         .then((res) => {
           setPrice(res.data.price);

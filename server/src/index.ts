@@ -6,7 +6,6 @@ import express from "express";
 // import session from "express-session";
 // import connectRedis from "connect-redis";
 import cors from "cors";
-import secure from "ssl-express-www";
 
 import { __prod__ } from "./constants";
 import { getAnalyze } from "./controllers/stock";
@@ -21,11 +20,15 @@ const main = async () => {
   app.use(
     cors({
       origin: process.env.CORS_ORIGIN,
-      credentials: true,
+      credentials: false,
     })
   );
 
-  app.use(secure);
+  app.use(function (_, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    next();
+  });
+
   //   app.use(
   //     session({
   //       name: COOKIE_NAME,
