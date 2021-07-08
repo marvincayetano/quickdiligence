@@ -13,8 +13,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "apollo-server-express": "^2.19.2",
-    "argon2": "^0.27.1",
     "axios": "^0.21.1",
     "connect-redis": "^5.0.0",
     "cors": "^2.8.5",
@@ -28,7 +26,6 @@
     "puppeteer": "^7.1.0",
     "reflect-metadata": "^0.1.13",
     "ts-node": "^9.1.1",
-    "typeorm": "^0.2.30",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
