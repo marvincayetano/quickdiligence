@@ -60,7 +60,7 @@ const AnalyzeMain: React.FC<AnalyzeMainProps> = ({}) => {
       // This get is getting the results after analyzing the stock
       axios
         .get(
-          `http://${process.env.NEXT_PUBLIC_SERVER}/analyze/${foundStock.symbol}`
+          `https://${process.env.NEXT_PUBLIC_SERVER}/analyze/${foundStock.symbol}`
         )
         .then((res) => {
           setPrice(res.data.price);

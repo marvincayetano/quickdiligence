@@ -55,7 +55,7 @@ export const NavBar: React.FC<NavBarProps> = ({ setFoundStock }) => {
       // Wait for 3 seconds before requesting to server
       axios
         // .get(`http://d.yimg.com/autoc.finance.yahoo.com/autoc?query={}&region=1&lang=en"`)
-        .get(`http://${process.env.NEXT_PUBLIC_SERVER}/ticker/${stock}`)
+        .get(`https://${process.env.NEXT_PUBLIC_SERVER}/ticker/${stock}`)
         .then((res) => {
           setStocks(res.data);
           console.log("RESULTS", res.data);
