@@ -11,7 +11,9 @@
     A quick due diligence research for stocks that you are interested in.
     <br />
     <a href="https://quickdiligence.vercel.app">View Demo</a>
+    &nbsp;|&nbsp;
     <a href="https://github.com/marvincayetano/quickdiligence/issues">Report Bug</a>
+    &nbsp;|&nbsp;
     <a href="https://github.com/marvincayetano/quickdiligence/issues">Request Feature</a>
   </p>
 </p>
