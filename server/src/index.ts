@@ -17,14 +17,12 @@ const main = async () => {
   //   const RedisStore = connectRedis(session);
   //   const redis = new Redis(process.env.REDIS_URL);
 
-  app.options("*", [
+  app.use(
     cors({
       origin: process.env.CORS_ORIGIN,
-      optionsSuccessStatus: 200,
-      methods: ["GET"],
-      allowedHeaders: ["Content-Type"],
-    }),
-  ]);
+      credentials: true,
+    })
+  );
 
   //   app.use(
   //     session({
@@ -47,6 +45,10 @@ const main = async () => {
 
   app.get("/analyze/:symbol", getAnalyze);
   app.get("/ticker/:search", getTicker);
+  app.get("/", (req, res) => {
+    console.log("objasdffffffffffffffffffffffffffffffffffffffect");
+    res.send({ deubg: "asdfasdf" });
+  });
 
   app.listen(parseInt(process.env.PORT), () => {
     console.log("server started on localhost:3000");
