@@ -34,7 +34,7 @@
 
 ## About The Project
 
-![Demo app](images/quickdiligence.gif)
+<img src="/images/quickdiligence.gif" width="250" height="250"/>
 
 ### Built With
 
