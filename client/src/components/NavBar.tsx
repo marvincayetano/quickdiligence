@@ -65,7 +65,7 @@ export const NavBar: React.FC<NavBarProps> = ({ setFoundStock }) => {
 
       axios
         .get(`https://${process.env.NEXT_PUBLIC_SERVER}/`)
-        .then((res) => {
+        .then(() => {
           console.log("GAGAGAG");
         })
         .catch((err) => {
