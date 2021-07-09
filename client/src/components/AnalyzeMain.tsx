@@ -43,7 +43,7 @@ const AnalyzeMain: React.FC<AnalyzeMainProps> = ({}) => {
 
       axios
         .get(
-          `https://${process.env.NEXT_PUBLIC_SERVER}/analyze/${
+          `https://${process.env.NEXT_PUBLIC_SERVER}/news/${
             foundStock.name.split(" ")[0]
           }`
         )
