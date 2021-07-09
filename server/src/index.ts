@@ -20,7 +20,7 @@ const main = async () => {
   app.use(
     cors({
       origin: process.env.CORS_ORIGIN,
-      credentials: true,
+      credentials: false,
     })
   );
 
@@ -45,7 +45,7 @@ const main = async () => {
 
   app.get("/analyze/:symbol", getAnalyze);
   app.get("/ticker/:search", getTicker);
-  app.get("/debug me", (req, res) => {
+  app.get("/debugme", (req, res) => {
     res.send({ deubg: "asdfasdf" });
   });
 
