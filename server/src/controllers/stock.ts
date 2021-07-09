@@ -44,13 +44,11 @@ const isIncreasing = (dataArr: string[]) => {
 
 // Analyze everything else here
 export const getAnalyze = async (req: Request, res: Response) => {
+  res.send({ hhaha: "GAGAG" });
+  return;
+
   let browser = await puppeteer.launch({
-    args: [
-      "--disable-web-security",
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-    ],
-    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
 
   const page = await browser.newPage();
@@ -167,6 +165,8 @@ export const getAnalyze = async (req: Request, res: Response) => {
     incomeStatement["Diluted EPS"][0] !== "-"
       ? incomeStatement["Diluted EPS"]
       : incomeStatement["Diluted EPS"].splice(1);
+
+  browser.close();
 
   res.send({
     // Current stock price
