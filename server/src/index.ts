@@ -45,7 +45,7 @@ const main = async () => {
 
   app.get("/analyze/:symbol", getAnalyze);
   app.get("/ticker/:search", getTicker);
-  app.get("/", (req, res) => {
+  app.get("/debug me", (req, res) => {
     res.send({ deubg: "asdfasdf" });
   });
 
