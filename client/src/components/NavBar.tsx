@@ -57,7 +57,6 @@ export const NavBar: React.FC<NavBarProps> = ({ setFoundStock }) => {
         .get(`https://${process.env.NEXT_PUBLIC_SERVER}/ticker/${stock}`)
         .then((res) => {
           setStocks(res.data);
-          console.log("RESULTS DEBUG", res.data);
         })
         .catch((err) => {
           console.log(err);

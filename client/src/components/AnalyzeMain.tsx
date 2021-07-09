@@ -34,7 +34,6 @@ const AnalyzeMain: React.FC<AnalyzeMainProps> = ({}) => {
 
   const [foundStock, setFoundStock] = useState<FoundStockInterface>();
   useEffect(() => {
-    console.log("FOUND", foundStock);
     if (foundStock) {
       setIsLoading(true);
       Nprogress.set(0.2);
@@ -44,14 +43,12 @@ const AnalyzeMain: React.FC<AnalyzeMainProps> = ({}) => {
 
       axios
         .get(
-          `https://newsapi.org/v2/top-headlines?q=${
-            // TODO: Change this to first name of the company
+          `https://${process.env.NEXT_PUBLIC_SERVER}/analyze/${
             foundStock.name.split(" ")[0]
-          }&category=business&apiKey=${process.env.NEXT_PUBLIC_NEWSAPI_KEY}`
+          }`
         )
         .then((result) => {
           setNews(result.data);
-          console.log(result);
         })
         .catch((err) => {
           console.error(err);
@@ -64,7 +61,6 @@ const AnalyzeMain: React.FC<AnalyzeMainProps> = ({}) => {
         )
         .then((res) => {
           setPrice(res.data.price);
-          console.log("RESULT", res.data);
           let currentScore = 0;
 
           const {

@@ -1,3 +1,4 @@
+import axios from "axios";
 import { Request, Response } from "express";
 import puppeteer from "puppeteer";
 
@@ -231,4 +232,17 @@ export const getAnalyze = async (req: Request, res: Response) => {
       data: balanceSheetArr["Long Term Debt"][0],
     },
   });
+};
+
+export const getNews = async (req: Request, res: Response) => {
+  await axios
+    .get(
+      `https://newsapi.org/v2/top-headlines?q=${req.params.company}&category=business&apiKey=${process.env.NEXT_PUBLIC_NEWSAPI_KEY}`
+    )
+    .then((result) => {
+      res.send(result);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
 };
