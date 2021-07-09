@@ -44,9 +44,6 @@ const isIncreasing = (dataArr: string[]) => {
 
 // Analyze everything else here
 export const getAnalyze = async (req: Request, res: Response) => {
-  res.send({ haha: "debug" });
-  return;
-
   let browser = await puppeteer.launch({
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });

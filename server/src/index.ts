@@ -45,9 +45,6 @@ const main = async () => {
 
   app.get("/analyze/:symbol", getAnalyze);
   app.get("/ticker/:search", getTicker);
-  app.get("/debugme", (req, res) => {
-    res.send({ deubg: "asdfasdf" });
-  });
 
   app.listen(parseInt(process.env.PORT), () => {
     console.log("server started on localhost:3000");

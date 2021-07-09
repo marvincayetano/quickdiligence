@@ -44,7 +44,7 @@ const AnalyzeMain: React.FC<AnalyzeMainProps> = ({}) => {
 
       axios
         .get(
-          `http://newsapi.org/v2/top-headlines?q=${
+          `https://newsapi.org/v2/top-headlines?q=${
             // TODO: Change this to first name of the company
             foundStock.name.split(" ")[0]
           }&category=business&apiKey=${process.env.NEXT_PUBLIC_NEWSAPI_KEY}`
