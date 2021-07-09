@@ -4,6 +4,15 @@ import axios from "axios";
 // Analyze everything else here
 export const getTicker = async (req: Request, res: Response) => {
   await axios
+    .get(`https://quickdiligence-server.herokuapp.com/debugme`)
+    .then((result) => {
+      console.log(result);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+  await axios
     .get(
       `http://d.yimg.com/autoc.finance.yahoo.com/autoc?query=${req.params.search}&region=1&lang=en`
     )
