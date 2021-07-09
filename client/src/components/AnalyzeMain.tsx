@@ -43,11 +43,12 @@ const AnalyzeMain: React.FC<AnalyzeMainProps> = ({}) => {
 
       axios
         .get(
-          `https://${process.env.NEXT_PUBLIC_SERVER}/news/${
+          `${process.env.NEXT_PUBLIC_SERVER}/news/${
             foundStock.name.split(" ")[0]
           }`
         )
         .then((result) => {
+          console.log("NEWS", result);
           setNews(result.data);
         })
         .catch((err) => {
@@ -56,9 +57,7 @@ const AnalyzeMain: React.FC<AnalyzeMainProps> = ({}) => {
 
       // This get is getting the results after analyzing the stock
       axios
-        .get(
-          `https://${process.env.NEXT_PUBLIC_SERVER}/analyze/${foundStock.symbol}`
-        )
+        .get(`${process.env.NEXT_PUBLIC_SERVER}/analyze/${foundStock.symbol}`)
         .then((res) => {
           setPrice(res.data.price);
           let currentScore = 0;

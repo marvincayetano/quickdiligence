@@ -100,7 +100,6 @@ export const getAnalyze = async (req: Request, res: Response) => {
   );
 
   const incomeStatement = cleanArray(els);
-  console.log("INCOME STATEMENT", incomeStatement);
 
   // Balance Sheet
   try {
@@ -125,7 +124,6 @@ export const getAnalyze = async (req: Request, res: Response) => {
   );
 
   const balanceSheetArr = cleanArray(els, true);
-  console.log("BALANCE SHEET", balanceSheetArr);
 
   // Cash Flow
   //   try {
@@ -237,10 +235,10 @@ export const getAnalyze = async (req: Request, res: Response) => {
 export const getNews = async (req: Request, res: Response) => {
   await axios
     .get(
-      `https://newsapi.org/v2/top-headlines?q=${req.params.company}&category=business&apiKey=${process.env.NEXT_PUBLIC_NEWSAPI_KEY}`
+      `https://newsapi.org/v2/top-headlines?q=${req.params.company}&category=business&apiKey=${process.env.NEWSAPI_KEY}`
     )
     .then((result) => {
-      res.send(result);
+      res.send(result.data);
     })
     .catch((err) => {
       console.error(err);
