@@ -17,17 +17,14 @@ const main = async () => {
   //   const RedisStore = connectRedis(session);
   //   const redis = new Redis(process.env.REDIS_URL);
 
-  app.use(
+  app.options("*", [
     cors({
       origin: process.env.CORS_ORIGIN,
-      credentials: false,
-    })
-  );
-
-  app.use(function (_, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    next();
-  });
+      optionsSuccessStatus: 200,
+      methods: ["GET"],
+      allowedHeaders: ["Content-Type"],
+    }),
+  ]);
 
   //   app.use(
   //     session({

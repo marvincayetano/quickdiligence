@@ -44,8 +44,17 @@ const isIncreasing = (dataArr: string[]) => {
 
 // Analyze everything else here
 export const getAnalyze = async (req: Request, res: Response) => {
-  let browser = await puppeteer.launch();
+  let browser = await puppeteer.launch({
+    args: [
+      "--disable-web-security",
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+    ],
+    headless: true,
+  });
+
   const page = await browser.newPage();
+
   let els: any;
 
   // Stock Price

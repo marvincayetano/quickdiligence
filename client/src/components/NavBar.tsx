@@ -59,6 +59,9 @@ export const NavBar: React.FC<NavBarProps> = ({ setFoundStock }) => {
         .then((res) => {
           setStocks(res.data);
           console.log("RESULTS", res.data);
+        })
+        .catch((err) => {
+          console.log(err);
         });
 
       onOpen();
